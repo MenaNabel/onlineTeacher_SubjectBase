@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineTeacher.Services.Subjects.Helper;
+using OnlineTeacher.Shared.Interfaces;
 using OnlineTeacher.Shared.Static;
 using OnlineTeacher.ViewModels.Subject;
 using System;
@@ -15,12 +16,15 @@ namespace OnlineTeacher.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+   [Authorize]
     public class SubjectsController : ControllerBase
     {
         private readonly ISubjectAsync _subjects;
-        public SubjectsController(ISubjectAsync subject)
+        private readonly IReport _IReport;
+        public SubjectsController(ISubjectAsync subject , IReport IReport)
         {
             _subjects = subject;
+            _IReport = IReport;
         }
         /// <summary>
         /// Retrive List Of Subjects 
@@ -29,12 +33,30 @@ namespace OnlineTeacher.Controllers.Admin
         /// List Of AddingsubjctViewModel
         /// </returns>
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Get()
         {
             return Ok(await _subjects.GetAll());
         }
+
+        [HttpGet("DownloadInfo")]
+         [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DownloadSubject()
+        {
+            string reportname = $"Subjects_{Guid.NewGuid():N}.xlsx";
+            var Subjects = await _subjects.GetAll();
+            
+            if (Subjects.ToList().Count > 0)
+            {
+                var exportbytes = _IReport.ExporttoExcel<SubjectExcellFormat>(
+                    Subjects.Select(sub=> new SubjectExcellFormat { Name= sub.Name, Price = sub.Price,  ImagePath = sub.ImagePath , LevelName = sub.Level.LevelName }).ToList()
+                    , reportname); 
+                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+            }
+            return NoContent();
+        }
         [HttpGet("{id}")]
-        //[Authorize(Roles.Admin)]
+        [Authorize(Roles.Admin)]
         public async Task<IActionResult> Get(int id)
         {
           var Subject = await _subjects.GetAsync(id);
@@ -44,7 +66,7 @@ namespace OnlineTeacher.Controllers.Admin
 
 
         [HttpPost]
-        //[Authorize(Roles.Admin)]
+        [Authorize(Roles.Admin)]
         public async Task<IActionResult> Post([FromForm] AddingSubjectViewModel subject)
         {
 
@@ -77,7 +99,7 @@ namespace OnlineTeacher.Controllers.Admin
         /// if subjectViewModel Not Valid return   HttpStatusCode Bad Request 
         /// </returns>
         [HttpPut("{id}")]
-       // [Authorize(Roles.Admin)]
+       [Authorize(Roles.Admin)]
         public async Task<IActionResult> Put(int id, [FromForm] AddingSubjectViewModel subjectViewModel)
         {
             if (id != subjectViewModel.ID) return BadRequest("الرقم التعريفي الذي ادخلته لا يساوي نفس الرقم التعريفي للماده المراد  التعديل عليها  ");
@@ -108,7 +130,7 @@ namespace OnlineTeacher.Controllers.Admin
 
         }
         [HttpGet("Search")]
-       // [Authorize]
+       [Authorize]
         public async Task<IActionResult> Search([FromQuery]string SubjectName)
         {
             return Ok(await _subjects.Filter(subj => subj.Name.Contains(SubjectName)));
@@ -116,7 +138,7 @@ namespace OnlineTeacher.Controllers.Admin
         }
 
         [HttpDelete("{id}")]
-      //  [Authorize(Roles.Admin)]
+      [Authorize(Roles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
 

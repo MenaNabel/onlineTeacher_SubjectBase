@@ -65,7 +65,7 @@ namespace OnlineTeacher
         
             // config the identity user schema and connect to it 
             services.AddDbContext<OnlineExamContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
 
             // config the  identity user and Role
             services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -150,10 +150,10 @@ namespace OnlineTeacher
             services.AddTransient<IReviewAsync, ReviewServicesAsync>();
             services.AddTransient<IFileImageUploading, FileImage>(); 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
-          
 
 
+
+            services.AddTransient<IReport, ReportService>();
             services.AddTransient<IFileImageUploading, FileImage>();
             services.AddTransient<ISudentLectureService, StudyLectureServicesAsync>();
             services.AddTransient<IExamAsync, ExamServicesAsync>();

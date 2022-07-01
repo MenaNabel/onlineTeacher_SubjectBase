@@ -15,15 +15,18 @@ namespace OnlineTeacher.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SubscribtionController : ControllerBase
     {
         private readonly ISubscribtion _Subscribtion;
-        
-        public SubscribtionController(ISubscribtion Subscribtion)
+        private readonly IReport _IReport;
+
+        public SubscribtionController(ISubscribtion Subscribtion, IReport IReport)
         {
             _Subscribtion = Subscribtion;
-            
+            _IReport = IReport;
+
+
         }
 
         [HttpGet]
@@ -32,6 +35,23 @@ namespace OnlineTeacher.Controllers.Admin
         {
             return Ok(_Subscribtion.GetAllSubscrbtion());
         }
+        [HttpGet("DownloadInfo")]
+        [Authorize(Roles = Roles.Admin)]
+        public  IActionResult DownloadSubject()
+        {
+            string reportname = $"Subscriptions_{Guid.NewGuid():N}.xlsx";
+            var Subscribtions =  _Subscribtion.GetAllSubscrbtion();
+
+            if (Subscribtions.ToList().Count > 0)
+            {
+                var exportbytes = _IReport.ExporttoExcel<SubscribtionsExcellFormat>(
+                    Subscribtions.Select(sub => new SubscribtionsExcellFormat { StudentName = sub.StudentName, SubjectName = sub.SubjectName, Date = sub.Date, IsActive = sub.IsActive, Level = sub.LevelID.ToString() }).ToList()
+                    , reportname);
+                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+            }
+            return NoContent();
+        }
+
         [HttpGet("Not Confirmed")]
         [Authorize(Roles.Admin)]
         public IActionResult GetNotConfirmedSubscribtions()

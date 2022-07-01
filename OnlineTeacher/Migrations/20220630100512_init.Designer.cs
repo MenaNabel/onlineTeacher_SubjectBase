@@ -10,8 +10,8 @@ using OnlineTeacher.DataAccess;
 namespace OnlineTeacher.Migrations
 {
     [DbContext(typeof(OnlineExamContext))]
-    [Migration("20220309151001_Add email column")]
-    partial class Addemailcolumn
+    [Migration("20220630100512_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

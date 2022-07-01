@@ -36,7 +36,7 @@ namespace OnlineTeacher.Controllers.Admin
         }
 
         [HttpPost]
-        [Authorize(Roles.Admin)]
+        //[Authorize(Roles.Admin)]
         public async Task<IActionResult> Post([FromBody] LevelViewModel levelViewModel)
         {
             if (ModelState.IsValid) {
