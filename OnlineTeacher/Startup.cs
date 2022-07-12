@@ -154,6 +154,7 @@ namespace OnlineTeacher
 
 
             services.AddTransient<IReport, ReportService>();
+            services.AddTransient<INetwork, NetworkServices>();
             services.AddTransient<IFileImageUploading, FileImage>();
             services.AddTransient<ISudentLectureService, StudyLectureServicesAsync>();
             services.AddTransient<IExamAsync, ExamServicesAsync>();

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Subscriptions
 {
@@ -76,10 +77,10 @@ namespace OnlineTeacher.Services.Subscriptions
             };
         }
 
-        public IEnumerable<SubscriptionViewModel> GetAllSubscrbtion()
+        public IPaginate<SubscribitionDetails> GetAllSubscrbtion(int index , int size)
         {
-            var Subscribtion = _Subscribtions.GetAllSubscrbtions();
-            return Subscribtion.Select(ConvertToSubscribitionViewModel);
+            return _Subscribtions.GetAllSubscrbtions(index , size);
+          
         }
 
         public async Task<IEnumerable<SubscriptionViewModel>> GetAllSubscrbtionForStudent(int StudentID)

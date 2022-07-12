@@ -34,5 +34,6 @@ namespace OnlineTeacher.Shared.Interfaces
 
         Task<UserMangerResonse> ResetPasswordAsync(ResetPasswordViewModel model);
         Task<UserMangerResonse> changePasswordAsync(ChangePasswordViewModel model);
+        Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model);
     }
 }

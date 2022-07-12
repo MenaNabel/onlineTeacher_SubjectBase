@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using OnlineTeacher.DataAccess.Context;
 using OnlineTeacher.DataAccess.HelperConntext;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
 {
@@ -25,8 +27,9 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
                 return await _dbContext.SaveChangesAsync() > 0 ? true : false;
           
         }
+ 
 
-        public  IOrderedQueryable<SubscribitionDetails> GetAllSubscrbtions()
+        public  IPaginate<SubscribitionDetails> GetAllSubscrbtions(int index =0, int size = 20)
         {
 
             var Subscriptions =
@@ -44,7 +47,7 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
                                       LevelID = Subj.LevelID,
                                       Date = Subscribe.DataAndTime,
                                      StudentID = Student.ID
-                                 }).OrderByDescending(SubDetailes=>SubDetailes.Date);
+                                 }).OrderByDescending(SubDetailes=>SubDetailes.Date).ToPaginate(index , size);
 
             
             return  Subscriptions;

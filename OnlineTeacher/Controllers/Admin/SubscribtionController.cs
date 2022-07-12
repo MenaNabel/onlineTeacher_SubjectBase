@@ -30,27 +30,27 @@ namespace OnlineTeacher.Controllers.Admin
         }
 
         [HttpGet]
-        [Authorize(Roles.Admin)]
-        public IActionResult GetSubscribtions()
+       // [Authorize(Roles.Admin)]
+        public IActionResult GetSubscribtions(int index  =0, int size=20)
         {
-            return Ok(_Subscribtion.GetAllSubscrbtion());
+            return Ok(_Subscribtion.GetAllSubscrbtion(index , size));
         }
         [HttpGet("DownloadInfo")]
         [Authorize(Roles = Roles.Admin)]
-        public  IActionResult DownloadSubject()
-        {
-            string reportname = $"Subscriptions_{Guid.NewGuid():N}.xlsx";
-            var Subscribtions =  _Subscribtion.GetAllSubscrbtion();
+        //public  IActionResult DownloadSubscrbtion()
+        //{
+        //    string reportname = $"Subscriptions_{Guid.NewGuid():N}.xlsx";
+        //    var Subscribtions =  _Subscribtion.GetAllSubscrbtion();
 
-            if (Subscribtions.ToList().Count > 0)
-            {
-                var exportbytes = _IReport.ExporttoExcel<SubscribtionsExcellFormat>(
-                    Subscribtions.Select(sub => new SubscribtionsExcellFormat { StudentName = sub.StudentName, SubjectName = sub.SubjectName, Date = sub.Date, IsActive = sub.IsActive, Level = sub.LevelID.ToString() }).ToList()
-                    , reportname);
-                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
-            }
-            return NoContent();
-        }
+        //    if (Subscribtions.Items.ToList().Count > 0)
+        //    {
+        //        var exportbytes = _IReport.ExporttoExcel<SubscribtionsExcellFormat>(
+        //            Subscribtions.Items.Select(sub => new SubscribtionsExcellFormat { StudentName = sub.StudentName, SubjectName = sub.SubjectName, Date = sub.Date, IsActive = sub.IsActive, Level = sub.LevelID.ToString() }).ToList()
+        //            , reportname);
+        //        return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+        //    }
+        //    return NoContent();
+        //}
 
         [HttpGet("Not Confirmed")]
         [Authorize(Roles.Admin)]

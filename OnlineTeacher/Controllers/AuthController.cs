@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineTeacher.DataAccess;
 using OnlineTeacher.Shared.Interfaces;
 using OnlineTeacher.Shared.Services.Emails;
+using OnlineTeacher.Shared.Static;
 using OnlineTeacher.Shared.ViewModel;
 using OnlineTeacher.ViewModels.Identity;
 using OnlineTeacher.ViewModels.Identity.Login;
@@ -147,7 +148,7 @@ namespace OnlineTeacher.Controllers
                     
         }
         [HttpDelete]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> Delete(string email)
         {
             var res = await _user.DeleteuserByEmail(email);
@@ -185,7 +186,6 @@ namespace OnlineTeacher.Controllers
             return BadRequest("Some properties are not valid");
         }
         [HttpPost("ChangePassword")]
-        
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel model)
         {
             model.ID = _user.GetCurrentUserID();
@@ -201,7 +201,24 @@ namespace OnlineTeacher.Controllers
 
             return BadRequest("Some properties are not valid");
         }
+        [HttpPost("ChangeIp")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> ChangeIp([FromBody] ChangeIpViewModel model)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                var result = await _user.ChangeIP(model);
 
+                if (result.IsSuccess)
+                    return Ok(result);
+
+                return BadRequest(result);
+            }
+
+            return BadRequest("Some properties are not valid");
+        }
+        
 
     }
 }

@@ -32,12 +32,14 @@ namespace OnlineTeacher.Shared.Services
         private IServiceProvider _services;
         private IStudentAsync _Student;
         private IEmailSender _emailSender;
+        private INetwork _NetworkHandeler;
         public UserServices(
 
             UserManager<ApplicationUser> userManger,
             IConfiguration config,
             IServiceProvider serviceProvider,
-            IEmailSender emailSender
+            IEmailSender emailSender 
+           
             )
         {
 
@@ -45,6 +47,7 @@ namespace OnlineTeacher.Shared.Services
             _config = config;
             _services = serviceProvider;
             _emailSender = emailSender;
+           
 
         }
 
@@ -84,9 +87,34 @@ namespace OnlineTeacher.Shared.Services
         {
             return _services.GetRequiredService<IHttpContextAccessor>();
         }
+        private string GetVisitorIp()
+        {
+          _NetworkHandeler =  _services.GetRequiredService<INetwork>();
+          return  _NetworkHandeler.GetVisitorIp();
+        }
+
 
         #endregion
 
+        public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
+        {
+            var user = await GetUser(model.Email);
+            if (user is null)
+                return new UserMangerResonse("Invalid email", false);
+
+            if (user.IsAssignedIp(model.OldIp))
+            {
+                if (user.DeleteIp(model.OldIp))
+                    if (user.Assign(model.NewIp))
+                    {
+                        if (await Update(user))
+                            return new UserMangerResonse("changed successfuly", true);
+                    }
+                      else  return new UserMangerResonse("not updated successfuly", true);
+                return new UserMangerResonse("not deleted successfuly", false);
+            }
+            return new UserMangerResonse("not found ip", false);
+        }
         public async Task<UserMangerResonse> RegiesterUserAsync(RegiesterViewModel model)
         {
             // if model not have value throw exception
@@ -162,6 +190,22 @@ namespace OnlineTeacher.Shared.Services
 
             //if(!user.EmailConfirmed)
             //    return new UserMangerResonse("Email Not Confirmed", false);
+
+            #region Validation IPs
+
+            string Ip = GetVisitorIp();
+            if (!user.IsAssignedIp(Ip))
+            {
+                if (!user.Assign(Ip))
+                    return new UserMangerResonse("Invalid Ip", false);
+                if (!await Update(user))
+                {
+                    return new UserMangerResonse("have a problem please try again", false);
+                }
+            }
+
+
+            #endregion
 
             // get user Role
             var Role = await GetRoleAsync(user);
@@ -472,6 +516,9 @@ namespace OnlineTeacher.Shared.Services
 
             userUpdated.Name = user.Name;
             userUpdated.PhoneNumber = user.PhoneNumber;
+            userUpdated.VisitorIP = user.VisitorIP;
+            userUpdated.VisitorIP2 = user.VisitorIP2;
+            userUpdated.VisitorIpsAssignedNo = user.VisitorIpsAssignedNo;
             
 
             var Result = await _userManger.UpdateAsync(userUpdated);
@@ -491,8 +538,6 @@ namespace OnlineTeacher.Shared.Services
             res.Errors = result.Errors.Select(e => e.Description);
             return res;
         }
-
-
 
         #endregion
 

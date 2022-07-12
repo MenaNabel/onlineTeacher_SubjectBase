@@ -1,16 +1,18 @@
 ﻿using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.DataAccess.HelperConntext;
 using OnlineTeacher.ViewModels.Subscribtions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Subscriptions.Helper
 {
     public interface ISubscribtion
     {
 
-        IEnumerable<SubscriptionViewModel> GetAllSubscrbtion();
+        IPaginate<SubscribitionDetails> GetAllSubscrbtion(int index =0, int size = 20);
          IEnumerable<SubscriptionViewModel> GetSubscrbtionsNotAccepeted();
          Task<SubscrptionResponseManger> Subscribe(IEnumerable<AddSubscibtionViewModel> subscribtions);
         Task<SubscrptionResponseManger> Subscribe(AddSubscibtionViewModel subscribtionsViewModel);

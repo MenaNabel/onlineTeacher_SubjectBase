@@ -5,6 +5,7 @@ using OnlineTeacher.Services.Home.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace OnlineTeacher.Controllers
@@ -28,6 +29,15 @@ namespace OnlineTeacher.Controllers
         [HttpGet("Honers")]
         public async Task<IActionResult> GetHoners() {
             return Ok( await _HonerList.GetHonerList());
+        }
+
+        [HttpGet("/VisitorIp")]
+        public  IActionResult GetVisitorIp()
+        {
+            IPHostEntry ipHostinfo = Dns.GetHostEntry(Dns.GetHostName());
+            string IpAddress = Convert.ToString(ipHostinfo.AddressList.FirstOrDefault(address => address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork));
+
+            return Ok(IpAddress);
         }
             
 
