@@ -45,7 +45,7 @@ namespace OnlineTeacher.Controllers.Student
 
             return BadRequest(Lectures);
         }
-        [Authorize(Roles.Student)]
+       // [Authorize(Roles.Student)]
         [HttpGet("{LectureID}")]
         public async Task<IActionResult> GetLecture(int LectureID)
         {

@@ -172,6 +172,7 @@ namespace OnlineTeacher
             services.AddTransient<IHonerList, HonerListServicesAsync>();
             services.AddTransient<ILectureServices, LectureServices>();
             services.AddTransient<ILectureRepo, LecturesRepoAsyncCustom>();
+            services.AddTransient<IWatcher, WatcherService>();
             
             #region StudyLecture
             services.AddTransient<IStudyLecture, StudyLectureServices>();

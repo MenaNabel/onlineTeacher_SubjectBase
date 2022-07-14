@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineTeacher.DataAccess.Context;
 using OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures;
+using OnlineTeacher.Services.Lectures.Helper;
 using OnlineTeacher.Services.Subjects.Helper;
 using OnlineTeacher.Shared.Enums;
 using OnlineTeacher.Shared.Interfaces;
@@ -36,7 +37,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         private IDeleteRepository<Lecture> _DeleteLectures;
         private IMapper _mapper;
         private IFileImageUploading _fileImageUploading;
-
+    
       
 
         List<(LectureType Type, Func<AddLectureViewModel, Lecture> func)> _ConvertToLecture;
@@ -94,7 +95,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         }
 
         #endregion
-        public LectureServices(ILectureRepo Lectures, IDeleteRepository<Lecture> DeleteLectures, IMapper mapper, IFileImageUploading fileImageUploading, ISubjectAsync Subject)
+        public LectureServices(ILectureRepo Lectures, IDeleteRepository<Lecture> DeleteLectures, IMapper mapper, IFileImageUploading fileImageUploading, ISubjectAsync Subject )
         {
             
             _Lectures = Lectures;
@@ -102,7 +103,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             _mapper = mapper;
             _fileImageUploading = fileImageUploading;
             _Subject = Subject;
-
+          
             SetDefaultConfiguration();
         }
 
@@ -376,12 +377,14 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         private IRepositoryAsync<Exam> _Exams;
         private IUserServices _user;
         private IMapper _Mapper;
-        public LectureServicesForStudent(ILectureRepo Lectures , IRepositoryAsync<Exam> Exam , IUserServices user,IMapper mapper)
+        private IWatcher _Watcher;
+        public LectureServicesForStudent(ILectureRepo Lectures , IRepositoryAsync<Exam> Exam , IUserServices user,IMapper mapper , IWatcher watcher)
         {
             _Lectures = Lectures;
             _Exams = Exam;
             _user = user;
-            _Mapper = mapper; 
+            _Mapper = mapper;
+            _Watcher = watcher;
         }
 
         public async Task<StudeingLectureViewModel> GetStudingLecture(int ID)
@@ -416,51 +419,31 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         }
         private async Task<StudeingLectureViewModel> validateUserAuthorization(Lecture lec)
         {
-           
+
             if (lec is null)
                 return null;
-            if (lec.Subject.Subscriptions is null || lec.Subject.Subscriptions.Count() == 0)
-                return null;
-            if (!lec.Subject.Subscriptions.FirstOrDefault().IsActive)
+            if (!CheckSubscription(lec))
                 return null;
             
-
             int studentID = _user.GetStudentID(); // get student ID
 
             var CurrentLectureExam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.ID);
 
             if (lec.previousLecture is null) // not found previous Lecture then can show lecture
-                if (CurrentLectureExam is null)
-                    return ConvertToStudingLectureViewModel(lec);
-                else return AddExamID(ConvertToStudingLectureViewModel(lec), CurrentLectureExam.ID);
+                return await checkAvilabilityWatching_And_AddExamIfNotFound(lec, CurrentLectureExam, studentID);
 
-          
-            // Get Exam For previous Lecture 
-            var exam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.previousLecture.LectureID, include: e => e.Include(e => e.StudentExams.Where(E => E.StudentID == studentID)));
-
-            if (exam is null) // not found exams for privuios lecture
-                if (CurrentLectureExam is null)
-                    return ConvertToStudingLectureViewModel(lec);
-                else 
-                    return AddExamID(ConvertToStudingLectureViewModel(lec), CurrentLectureExam.ID);
-            if (exam.StudentExams is null || exam.StudentExams.Count() == 0) // Student not test exam
-                return null;
-            var StudentExam = exam.StudentExams.FirstOrDefault();
-            if (StudentExam is null) // student not test exam
-                return null;
-            if (StudentExam.IsPassed == true) // student pass exam 
-                if (CurrentLectureExam is null)
-                    return ConvertToStudingLectureViewModel(lec);
-                else
-                    return AddExamID(ConvertToStudingLectureViewModel(lec), CurrentLectureExam.ID);
-
+             // Get Exam For previous Lecture 
+             var exam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.previousLecture.LectureID, include: e => e.Include(e => e.StudentExams.Where(E => E.StudentID == studentID)));
+            // check not found exams for privuios lecture or passing Exam 
+            if (exam is null || checkPassingExam(exam)) 
+                return await checkAvilabilityWatching_And_AddExamIfNotFound(lec, CurrentLectureExam, studentID);
+            
             return null; //student not pass exam
 
         }
+    
         private async Task<StudeingLectureViewModel> validateUserAuthorization1(Lecture lec)
         {
-
-           
 
             var CurrentLectureExam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.ID);
 
@@ -492,6 +475,18 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             return null; //student not pass exam
 
         }
+        private async Task<bool> CheckWatchingAvailiableTimes(int studentID , int LectureID)
+        {
+            var wacher = await _Watcher.GetWatching(studentID, LectureID);
+            if (wacher is null)
+                return false;
+            else if (wacher.Watch())
+                if (_Watcher.Update(wacher))
+                    return true;
+               
+            return false;
+
+        }
         private StudeingLectureViewModel AddExamID(StudeingLectureViewModel LectureViewModel , int ExamID)
         {
             LectureViewModel.ExamID = ExamID;
@@ -512,6 +507,33 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return null;
             return Lectures.Items.Select(ConvertToStudingLectureViewModel);
 
+        }
+
+        private bool checkPassingExam(Exam PreviousLectureExam)
+        {
+            if (PreviousLectureExam.StudentExams is null || PreviousLectureExam.StudentExams.Count() == 0) // Student not test exam
+                return false;
+            var StudentExam = PreviousLectureExam.StudentExams.FirstOrDefault();
+            if (StudentExam is null) // student not test exam
+                return false;
+            return StudentExam.IsPassed;
+
+        }
+        private async Task<StudeingLectureViewModel> checkAvilabilityWatching_And_AddExamIfNotFound(Lecture lecture, Exam CurrentLectureExam, int StudentID)
+        {
+            if (await CheckWatchingAvailiableTimes(StudentID, lecture.ID))
+                if (CurrentLectureExam is null)
+                    return ConvertToStudingLectureViewModel(lecture);
+                else
+                    return AddExamID(ConvertToStudingLectureViewModel(lecture), CurrentLectureExam.ID);
+
+            return null; //not allaw to watch lecture
+        }
+        private bool CheckSubscription(Lecture lecture)
+        {
+            if (lecture.Subject.Subscriptions is null || lecture.Subject.Subscriptions.Count() == 0 || (!lecture.Subject.Subscriptions.FirstOrDefault().IsActive))
+                return false;
+            return true;
         }
     }
 }

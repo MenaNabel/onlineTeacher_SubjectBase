@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.DataAccess.Context.Bridge;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace OnlineTeacher.DataAccess
                 table.ExamID,
                 table.QuestionID
             }); 
+
             modelBuilder.Entity<StudentExam>().HasKey(table => new {
                 table.ExamID,
                 table.StudentID
@@ -25,7 +27,11 @@ namespace OnlineTeacher.DataAccess
                 table.SubjectID
             });
             modelBuilder.Entity<Subject>().HasIndex(su => su.LevelID);
-            
+            modelBuilder.Entity<Watching>().HasKey(table => new {
+                table.StudentID,
+                table.LectureID
+
+            });
 
             base.OnModelCreating(modelBuilder);
         }
@@ -47,6 +53,7 @@ namespace OnlineTeacher.DataAccess
         public DbSet<SiteInfo> SiteInfo { get; set; }
         public DbSet<HonerList> HonerLists { get; set; }
         public DbSet<LectureDetails> LectureDetails { get; set; }
-       
+        public DbSet<Watching> Watchings { get; set; }
+
     }
 }

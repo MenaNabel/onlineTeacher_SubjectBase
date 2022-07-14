@@ -24,12 +24,12 @@ namespace OnlineTeacher.Controllers
     public class StudyLecturesController : Controller
     {
         private readonly ILectureServices _lectures;
-        private readonly IReport _IReport;
+       // private readonly IReport _IReport;
         private LectureType type = LectureType.studying;
         public StudyLecturesController(ILectureServices lectures, IReport IReport)
         {
             _lectures = lectures;
-            _IReport = IReport;
+           // _IReport = IReport;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -37,22 +37,22 @@ namespace OnlineTeacher.Controllers
             var Lectures = await _lectures.GetAll(type);
             return Ok(Lectures.Select(le=>(StudeingLectureViewModel)le));
         }
-        [HttpGet("DownloadInfo")]
-        [Authorize(Roles = Roles.Admin)]
-        public  async Task<IActionResult> DownloadSubject()
-        {
-            string reportname = $"Lecture_{Guid.NewGuid():N}.xlsx";
-            var Lectures =  await _lectures.GetAll(type);
+        //[HttpGet("DownloadInfo")]
+        //[Authorize(Roles = Roles.Admin)]
+        //public  async Task<IActionResult> DownloadLectures()
+        //{
+        //    string reportname = $"Lecture_{Guid.NewGuid():N}.xlsx";
+        //    var Lectures =  await _lectures.GetAll(type);
 
-            if (Lectures.ToList().Count > 0)
-            {
-                var exportbytes = _IReport.ExporttoExcel<LectureExcelFormat>(
-                    Lectures.Select(lec => new LectureExcelFormat { Name = lec.Name, Description = lec.Description,  LectureLink = lec.LectureLink, Type = lec.Type }).ToList()
-                    , reportname);
-                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
-            }
-            return NoContent();
-        }
+        //    if (Lectures.ToList().Count > 0)
+        //    {
+        //        var exportbytes = _IReport.ExporttoExcel<LectureExcelFormat>(
+        //            Lectures.Select(lec => new LectureExcelFormat { Name = lec.Name, Description = lec.Description,  LectureLink = lec.LectureLink, Type = lec.Type }).ToList()
+        //            , reportname);
+        //        return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+        //    }
+        //    return NoContent();
+        //}
 
 
         [HttpGet("{id}")]

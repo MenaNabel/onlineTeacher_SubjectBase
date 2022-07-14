@@ -26,17 +26,16 @@ namespace OnlineTeacher.Controllers.Admin
             _Subscribtion = Subscribtion;
             _IReport = IReport;
 
-
         }
 
         [HttpGet]
-       // [Authorize(Roles.Admin)]
+        [Authorize(Roles.Admin)]
         public IActionResult GetSubscribtions(int index  =0, int size=20)
         {
             return Ok(_Subscribtion.GetAllSubscrbtion(index , size));
         }
-        [HttpGet("DownloadInfo")]
-        [Authorize(Roles = Roles.Admin)]
+        //[HttpGet("DownloadInfo")]
+        //[Authorize(Roles = Roles.Admin)]
         //public  IActionResult DownloadSubscrbtion()
         //{
         //    string reportname = $"Subscriptions_{Guid.NewGuid():N}.xlsx";

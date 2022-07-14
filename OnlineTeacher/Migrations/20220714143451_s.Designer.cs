@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineTeacher.DataAccess;
 
 namespace OnlineTeacher.Migrations
 {
     [DbContext(typeof(OnlineExamContext))]
-    partial class OnlineExamContextModelSnapshot : ModelSnapshot
+    [Migration("20220714143451_s")]
+    partial class s
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,24 +221,6 @@ namespace OnlineTeacher.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("OnlineTeacher.DataAccess.Context.Bridge.Watching", b =>
-                {
-                    b.Property<int>("StudentID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LectureID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WatchingCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentID", "LectureID");
-
-                    b.HasIndex("LectureID");
-
-                    b.ToTable("Watchings");
                 });
 
             modelBuilder.Entity("OnlineTeacher.DataAccess.Context.Exam", b =>
@@ -749,25 +733,6 @@ namespace OnlineTeacher.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("OnlineTeacher.DataAccess.Context.Bridge.Watching", b =>
-                {
-                    b.HasOne("OnlineTeacher.DataAccess.Context.Lecture", "Lecture")
-                        .WithMany()
-                        .HasForeignKey("LectureID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineTeacher.DataAccess.Context.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lecture");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("OnlineTeacher.DataAccess.Context.Exam", b =>
