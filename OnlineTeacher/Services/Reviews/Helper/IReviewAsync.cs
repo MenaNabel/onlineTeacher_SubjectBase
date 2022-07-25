@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Reviews.Helper
 {
     public interface IReviewAsync : IInsertAsync<ReviewViewModel> , IReadAsync<ReviewDetailsViewModel>
     {
+
         Task<bool> UpdateAppearance(ReviewUpdatedViewModel reviewUpdatedViewModel);
         Task<bool> Delete(int ID);
         /// <summary>
@@ -23,6 +25,6 @@ namespace OnlineTeacher.Services.Reviews.Helper
         /// <returns>
         /// Task<IEnumerable<ReviewDetailsViewModel>>
         /// </returns>
-        Task<IEnumerable<ReviewDetailsViewModel>> GetReviewsConfirmed();
+        Task<IPaginate<ReviewDetailsViewModel>> GetReviewsConfirmed(int index =0 , int size=20);
     }
 }

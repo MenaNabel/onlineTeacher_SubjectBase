@@ -24,15 +24,15 @@ namespace OnlineTeacher.Controllers.Admin
         }
         [HttpGet("Admin/Confirm")]
         [Authorize(Roles.Admin)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int index =0, int size=20)
         {
-            return Ok(await _Reviews.GetAll());
+            return Ok(await _Reviews.GetAll(index,size));
         }
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetReviews()
+        public async Task<IActionResult> GetReviews(int index=0, int size=20)
         {
-            return Ok(await _Reviews.GetReviewsConfirmed());
+            return Ok(await _Reviews.GetReviewsConfirmed(index , size));
         }
          [HttpGet("{id}")]
         [Authorize(Roles.Admin)]

@@ -36,5 +36,14 @@ namespace OnlineTeacher.DataAccess.Context.Bridge
             }
             return false;
         }
+        public bool ReOpenWatching() 
+        {
+            if (!AllowToWatch())
+            {
+                WatchingCount -= 3;
+                return true;
+            }
+            return false;
+        }
     }
 }

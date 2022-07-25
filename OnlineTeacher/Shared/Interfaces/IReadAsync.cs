@@ -9,6 +9,6 @@ namespace OnlineTeacher.Shared.Interfaces
 
     public interface IReadAsync<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll();
+        Task<IPaginate<TEntity>> GetAll(int index =0, int Size=20);
     }
 }

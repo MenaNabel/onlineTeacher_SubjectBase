@@ -15,6 +15,7 @@ using OnlineTeacher.Shared.Interfaces;
 using OnlineTeacher.ViewModels.Exams;
 using OnlineTeacher.ViewModels.Questions;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Exams
 {
@@ -97,10 +98,11 @@ namespace OnlineTeacher.Services.Exams
         }
 
 
-        public async Task<IEnumerable<ExamViewModelWithLecture>> GetAll()
+        public async Task<IPaginate<ExamViewModelWithLecture>> GetAll(int index , int size)
         {
-            var Exams = await _Exams.GetListAsync(include: Ex => Ex.Include(e => e.Lecture), orderBy: Ex => Ex.OrderByDescending(ex => ex.DateAndExamminationExpireTime));
-            return Exams.Items.Select(ConvertToExamViewModelWithLecture);
+            var Exams = await _Exams.GetListAsync(include: Ex => Ex.Include(e => e.Lecture), orderBy: Ex => Ex.OrderByDescending(ex => ex.DateAndExamminationExpireTime) , index:index,size:size);
+            //return Exams.Items.Select(ConvertToExamViewModelWithLecture);
+            return new Paginate<Exam, ExamViewModelWithLecture>(Exams , l => l.Select(le => ConvertToExamViewModelWithLecture(le)));
         }
 
        

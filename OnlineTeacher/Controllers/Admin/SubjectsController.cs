@@ -34,9 +34,9 @@ namespace OnlineTeacher.Controllers.Admin
         /// </returns>
         [HttpGet]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int index=0 , int size=20)
         {
-            return Ok(await _subjects.GetAll());
+            return Ok(await _subjects.GetAll(index, size));
         }
 
         [HttpGet("DownloadInfo")]
@@ -46,10 +46,10 @@ namespace OnlineTeacher.Controllers.Admin
             string reportname = $"Subjects_{Guid.NewGuid():N}.xlsx";
             var Subjects = await _subjects.GetAll();
             
-            if (Subjects.ToList().Count > 0)
+            if (Subjects.Items.ToList().Count > 0)
             {
                 var exportbytes = _IReport.ExporttoExcel<SubjectExcellFormat>(
-                    Subjects.Select(sub=> new SubjectExcellFormat { Name= sub.Name, Price = sub.Price,  ImagePath = sub.ImagePath , LevelName = sub.Level.LevelName }).ToList()
+                    Subjects.Items.Select(sub=> new SubjectExcellFormat { Name= sub.Name, Price = sub.Price,  ImagePath = sub.ImagePath , LevelName = sub.Level.LevelName }).ToList()
                     , reportname); 
                 return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
             }

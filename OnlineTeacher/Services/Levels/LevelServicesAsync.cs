@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Levels
 {
@@ -35,10 +36,11 @@ namespace OnlineTeacher.Services.Levels
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<LevelViewModel>> GetAll()
+        public async Task<IPaginate<LevelViewModel>> GetAll(int index =0 , int size =20)
         {
-            var Levels = await _Levels.GetListAsync();
-            return Levels.Items.Select(ConvertToLevelViewModel);
+            var Levels = await _Levels.GetListAsync(index:index , size:size);
+            //return Levels.Items.Select(ConvertToLevelViewModel);
+            return new Paginate<Level, LevelViewModel>(Levels, l => l.Select(le => ConvertToLevelViewModel(le)));
         }
 
         public async Task<bool> update(LevelViewModel levelViewModel)

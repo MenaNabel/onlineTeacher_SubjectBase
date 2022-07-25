@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Students
 {
@@ -22,16 +23,16 @@ namespace OnlineTeacher.Services.Students
         private readonly IMapper _Mapper;
         private readonly IUserServices _User;
         private readonly IFileImageUploading _ImageUploading;
-        private readonly OnlineExamContext _context;
-
+        //private readonly OnlineExamContext _context;
+       
         public StudentServicesAsync(IRepositoryAsync<Student> Student, IMapper Mapper, IUserServices user,
-            IFileImageUploading ImageUploading, OnlineExamContext context)
+            IFileImageUploading ImageUploading)// OnlineExamContext context)
         {
             _Students = Student;
             _Mapper = Mapper;
             _User = user;
             _ImageUploading = ImageUploading;
-            _context = context;
+           // _context = context;
         }
         public async Task<AddedStudentViewModel> Add(AddedStudentViewModel studentViewModel)
         {
@@ -50,20 +51,22 @@ namespace OnlineTeacher.Services.Students
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<StudentViewModel>> GetAll()
+        public async Task<IPaginate<StudentViewModel>> GetAll(int index , int size)
         {
-            //var Students = await _Students.GetListAsync(include: St => St.Include(s => s.Level), enableTracking: false);
-            var students = _context.Student.Select(x => new StudentViewModel
-            {
-                Level = _Mapper.Map<LevelViewModel>(x.Level),
-                City = x.City,
-                Email = x.Email,
-                ID = x.ID,
-                Name = x.Name,
-                LevelID = x.LevelID,
-                Phone = x.Phone
-            });
-          return students;
+            var Students = await _Students.GetListAsync(include: St => St.Include(s => s.Level),index:index , size:size);
+            return new Paginate<Student, StudentViewModel>(Students, s => s.Select(st => ConvertToStudentViewModel(st)));
+            
+          //  var students = _context.Student.Select(x => new StudentViewModel
+          //  {
+          //      Level = _Mapper.Map<LevelViewModel>(x.Level),
+          //      City = x.City,
+          //      Email = x.Email,
+          //      ID = x.ID,
+          //      Name = x.Name,
+          //      LevelID = x.LevelID,
+          //      Phone = x.Phone
+          //  });
+          //return students;
         }
         public async Task<StudentViewModel> GetAsync()
         {

@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using Threenine.Data;
-
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Subjects
 {
@@ -121,10 +121,11 @@ namespace OnlineTeacher.Services.Subjects
             return Subject is null ? null : Subject;
         }
 
-        public async Task<IEnumerable<SubjectViewModel>> GetAll()
+        public async Task<IPaginate<SubjectViewModel>> GetAll(int index =0 , int size =20)
         {
-            var Subjects = await _Subjects.GetListAsync(include: Sub => Sub.Include(s => s.level));
-            return Subjects.Items.Select(ConvertType_Subject);
+            var Subjects = await _Subjects.GetListAsync(include: Sub => Sub.Include(s => s.level) , index:index , size:size);
+            // return Subjects.Items.Select(ConvertType_Subject);
+            return new Paginate<Subject, SubjectViewModel>(Subjects, s => s.Select(su => ConvertType_Subject(su)));
 
         }
 

@@ -7,11 +7,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Exams.Helper
 {
-    public interface IExamAsync : IReadAsync<ExamViewModelWithLecture>, IInsertAsync<AddedExamViewModel>
+    public interface IExamAsync :  IInsertAsync<AddedExamViewModel>
     {
+        Task<IPaginate<ExamViewModelWithLecture>> GetAll(int index, int size);
         Task<HttpStatusCode> Update(AddedExamViewModel Exam);
         Task<bool> Delete(int ID);
         Task<ExamViewModel> Get(int Id);

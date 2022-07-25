@@ -9,11 +9,13 @@ using OnlineTeacher.Shared.Interfaces;
 using OnlineTeacher.Shared.ViewModel;
 using OnlineTeacher.ViewModels.Lecture;
 using OnlineTeacher.ViewModels.Lecture.Helper;
+using OnlineTeacher.ViewModels.Lecture.share;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Lectures.Refactoring
 {
@@ -23,11 +25,12 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         Task<bool> IsExsist(int ID);
         Task<LectureResponseManger> Add(AddLectureViewModel entity, LectureType type);
         Task<LectureViewModel> GetAsync(int ID, LectureType type);
-        Task<IEnumerable<LectureViewModel>> GetAll(LectureType type);
-        Task<IEnumerable<LectureViewModel>> GetAll();
+        IPaginate<LectureViewModel> GetAll(LectureType type, int index = 0, int Size = 20);
+      //  Task<IEnumerable<LectureViewModel>> GetAll();
         Task<Lecture> Get(int ID);
         Task<LectureResponseManger> Update(AddLectureViewModel lec, LectureType type);
         Task<FileResponse> GetFile(int LectureID);
+        bool ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture);
     }
     
     public  class LectureServices : ILectureServices
@@ -220,21 +223,22 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return  ConvertToLectureViewModel(lecture);
             }
         }
-        public async Task<IEnumerable<LectureViewModel>> GetAll(LectureType type)
+        public  IPaginate<LectureViewModel> GetAll(LectureType type ,int index = 0 ,int Size = 20)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+            
 
-            var lectures = await _Lectures.GetLecturesWithoutFiles(lec => lec.Type == type.ToString(), include: Lec => Lec.Include(le => le.Subject).Include(le=>le.previousLecture));
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            return lectures.Select(l => DetectType(l,type));
-        }
-        public async Task<IEnumerable<LectureViewModel>> GetAll()
-        {
-            var lectures = await _Lectures.GetLecturesWithoutFiles(include: Lec => Lec.Include(le => le.Subject));
+            var lectures =  _Lectures.GetLecturesWithoutFiles(lec => lec.Type == type.ToString(), include: Lec => Lec.Include(le => le.Subject).Include(le=>le.previousLecture) , index:index , size:Size);
 
-            return lectures.Select(ConvertToLectureViewModel);
+            //var Lectures=   lectures.Items.Select(l => DetectType(l,type));
+
+            return new Paginate<Lecture, LectureViewModel>(lectures, l => l.Select(le => DetectType(le, type))); ;
         }
+        //public async IEnumerable<LectureViewModel> GetAll()
+        //{
+        //    // var lectures = await _Lectures.GetLecturesWithoutFiles(include: Lec => Lec.Include(le => le.Subject));
+
+        //  //  return lectures.Select(ConvertToLectureViewModel);
+        //}
         private LectureViewModel ConvertToLectureViewModel(Lecture viewModel)
         {
             var lecture = _mapper.Map<LectureViewModel>(viewModel);
@@ -362,6 +366,10 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             return Response; 
         }
 
+        public bool ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public interface ILectureServicesForStudent

@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
 {
@@ -18,7 +19,7 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
         {
                 
         }
-        public async Task<IEnumerable<Lecture>> GetLecturesWithoutFiles(Expression<Func<Lecture, bool>> predicate = null,
+        public  IPaginate<Lecture> GetLecturesWithoutFiles(Expression<Func<Lecture, bool>> predicate = null,
             Func<IQueryable<Lecture>, IOrderedQueryable<Lecture>> orderBy = null,
             Func<IQueryable<Lecture>, IIncludableQueryable<Lecture, object>> include = null,
             int index = 0,
@@ -35,10 +36,10 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
             if (predicate != null) query = query.Where(predicate);
 
             if (orderBy != null)
-                return orderBy(query);
+                return orderBy(query).ToPaginate(index, size);
            
 
-            return await query.Select(
+             return query.Select(
                 l => new Lecture
                 {
                     DateTime = l.DateTime,
@@ -56,7 +57,7 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
                     SubjectID = l.SubjectID,
                     Type = l.Type
                 }
-            ).ToListAsync();
+            ).ToPaginate(index , size);
         }
 
         public async Task<Lecture> SingleOrDefaultWithoutFile(Expression<Func<Lecture, bool>> predicate = null,

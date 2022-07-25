@@ -32,10 +32,19 @@ namespace OnlineTeacher.Controllers
            // _IReport = IReport;
         }
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public  IActionResult Get(int index =0 , int size= 20)
         {
-            var Lectures = await _lectures.GetAll(type);
-            return Ok(Lectures.Select(le=>(StudeingLectureViewModel)le));
+            var Lectures =  _lectures.GetAll(type , index, size);
+            return Ok(Lectures);
+        }
+
+        [HttpGet("Request_Open_Watching")]
+        public async Task<IActionResult> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
+        {
+            if (_lectures.ReOpenWatchingRequest(reOpenLecture))
+                return Ok("Request Successfuly");
+            return BadRequest("we Have a Problem please try again");
+           
         }
         //[HttpGet("DownloadInfo")]
         //[Authorize(Roles = Roles.Admin)]

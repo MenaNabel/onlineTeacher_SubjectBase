@@ -31,14 +31,14 @@ namespace OnlineTeacher.Controllers
             return Ok( await _HonerList.GetHonerList());
         }
 
-        [HttpGet("/VisitorIp")]
-        public  IActionResult GetVisitorIp()
-        {
-            IPHostEntry ipHostinfo = Dns.GetHostEntry(Dns.GetHostName());
-            string IpAddress = Convert.ToString(ipHostinfo.AddressList.FirstOrDefault(address => address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork));
+        //[HttpGet("/VisitorIp")]
+        //public  IActionResult GetVisitorIp()
+        //{
+        //    IPHostEntry ipHostinfo = Dns.GetHostEntry(Dns.GetHostName());
+        //    string IpAddress = Convert.ToString(ipHostinfo.AddressList.FirstOrDefault(address => address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork));
 
-            return Ok(IpAddress);
-        }
+        //    return Ok(IpAddress);
+        //}
             
 
     }

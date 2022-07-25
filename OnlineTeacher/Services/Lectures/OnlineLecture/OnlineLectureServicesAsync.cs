@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Lectures
 {
@@ -74,10 +75,11 @@ namespace OnlineTeacher.Services.Lectures
             return lecture is not null ? ConvertType_Lecture(lecture): null ;
         }
 
-        public async Task<IEnumerable<LectureViewModel>> GetAll()
+        public async Task<IPaginate<LectureViewModel>> GetAll(int index = 0, int size =20)
         {
-            var lectures = await _instances.GetListAsync(lec=>lec.Type == LectureType.online.ToString(),include: Lec => Lec.Include(le => le.Subject));
-            return lectures.Items.Select(ConvertType_Lecture);
+            var lectures = await _instances.GetListAsync(lec=>lec.Type == LectureType.online.ToString(),include: Lec => Lec.Include(le => le.Subject) , index: index , size:size);
+            //return lectures.Items.Select(ConvertType_Lecture);
+            return new Paginate<Lecture, LectureViewModel>(lectures, l => l.Select(le => ConvertType_Lecture(le)));
         }
 
         public async Task<bool> IsExsist(int ID)

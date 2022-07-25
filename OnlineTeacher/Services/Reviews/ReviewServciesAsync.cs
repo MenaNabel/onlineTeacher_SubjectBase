@@ -58,20 +58,22 @@ namespace OnlineTeacher.Services.Reviews
        /// Get All Review That not confirmed yet to Admin
        /// </summary>
        /// <returns></returns>
-        public async Task<IEnumerable<ReviewDetailsViewModel>> GetAll()
+        public async Task<IPaginate<ReviewDetailsViewModel>> GetAll(int index =0 , int Size = 20)
         { // appear to teacher is not confirme yet
             
-            var Reviews = await _Reviews.GetListAsync();
-            return Reviews.Items.Select(ConvertToReviewDetailsViewModel);
+            var Reviews = await _Reviews.GetListAsync(index:index ,size:Size);
+            // return Reviews.Items.Select(ConvertToReviewDetailsViewModel);
+            return new Paginate<Review, ReviewDetailsViewModel>(Reviews, R => R.Select(Re => ConvertToReviewDetailsViewModel(Re)));
         }  
         
-        public async Task<IEnumerable<ReviewDetailsViewModel>> GetReviewsConfirmed()
+        public async Task<IPaginate<ReviewDetailsViewModel>> GetReviewsConfirmed(int index=0, int size=20)
         { // appear to teacher is  confirmed 
-            var Reviews = await GetReviewsWithCondition(IsAppear: true);
-            return Reviews.Items.Select(ConvertToReviewDetailsViewModel);
+            var Reviews = await GetReviewsWithCondition(IsAppear: true , index, size);
+            //return Reviews.Items.Select(ConvertToReviewDetailsViewModel);
+            return new Paginate<Review, ReviewDetailsViewModel>(Reviews, R => R.Select(Re => ConvertToReviewDetailsViewModel(Re)));
 
         }
-       
+
         public async Task<ReviewViewModel> GetAsync(int id)
         {
             var Review = await _Reviews.SingleOrDefaultAsync(rev => rev.ID == id);
@@ -104,10 +106,10 @@ namespace OnlineTeacher.Services.Reviews
             return review;
         }
         
-        private async Task<IPaginate<Review>> GetReviewsWithCondition(bool IsAppear)
+        private async Task<IPaginate<Review>> GetReviewsWithCondition(bool IsAppear , int index =0 , int size=20)
         {
 
-            var reviews = await _Reviews.GetListAsync(Revi => Revi.IsAppear == IsAppear);
+            var reviews = await _Reviews.GetListAsync(Revi => Revi.IsAppear == IsAppear  , index:index , size:size);
             return reviews;
         }
         

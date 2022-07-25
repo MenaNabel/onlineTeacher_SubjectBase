@@ -8,12 +8,13 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Threenine.Data;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
 {
     public interface ILectureRepo : IRepositoryAsync<Lecture>
     {
-        Task<IEnumerable<Lecture>> GetLecturesWithoutFiles(Expression<Func<Lecture, bool>> predicate = null,
+        IPaginate<Lecture> GetLecturesWithoutFiles(Expression<Func<Lecture, bool>> predicate = null,
             Func<IQueryable<Lecture>, IOrderedQueryable<Lecture>> orderBy = null,
             Func<IQueryable<Lecture>, IIncludableQueryable<Lecture, object>> include = null,
             int index = 0,

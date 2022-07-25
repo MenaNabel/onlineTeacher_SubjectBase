@@ -29,9 +29,9 @@ namespace OnlineTeacher.Controllers
 
         [HttpGet]
         [Authorize(Roles.Admin)]
-        public async Task<IActionResult> Get()
+        public  IActionResult Get(int index =0, int size = 20)
         {
-            return Ok(await _Lec.GetAll(type));
+            return Ok(_Lec.GetAll(type , index , size));
         }
 
 
