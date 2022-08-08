@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using OnlineTeacher.ViewModels.StudentExam;
+using Threenine.Data.Paging;
+using OnlineTeacher.DataAccess;
 
 namespace OnlineTeacher.Services.Exams
 {
@@ -123,6 +125,32 @@ namespace OnlineTeacher.Services.Exams
 
           return await  _studentExam.GradesProgrees(studentID);
         
+        }
+
+        public async Task<IEnumerable<LectureExamDetailViewModel>> GetExamsForCurrentStudent()
+        {
+            int studentID = _User.GetStudentID();
+            if (studentID == 0)
+                return null;
+           
+          var Report=  await _Exams.GetListAsync(include: e => e.Include(s => s.StudentExams.Where(es=>es.StudentID == studentID)).ThenInclude(s => s.Student).Include(E=>E.Lecture));
+            return Report.Items.Select(ConvertToLectureExamDetailViewModel).Where(s=>s is not null);
+        }
+
+        private LectureExamDetailViewModel ConvertToLectureExamDetailViewModel(Exam Exam)
+        {
+            if (Exam.StudentExams == null || Exam.StudentExams.Count() ==0)
+                return null;
+         if (Exam.StudentExams.FirstOrDefault()?.Student == null)
+                return null;
+            if (Exam.Lecture == null)
+                return null;
+            LectureExamDetailViewModel detailViewModel = new LectureExamDetailViewModel();
+            detailViewModel.Degree = Exam.Degree;
+            detailViewModel.ExamName = Exam.Name;
+            detailViewModel.SubmitTime = Exam.StudentExams.FirstOrDefault().SubmitTime;
+            detailViewModel.LectureName = Exam.Lecture.Name;
+            return detailViewModel;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace OnlineTeacher.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class ExamsController : ControllerBase
     {
         private readonly ILogger<ExamsController> _logger;
@@ -33,7 +33,12 @@ namespace OnlineTeacher.Controllers.Admin
         {
            return  Ok(await _Exams.GetAll(index ,size));
         }
-
+        [HttpGet("GetExamsForStudents")]
+        //Authorize(Roles.Admin)]
+        public async Task<IActionResult> GetExamsForStudents(int index = 0, int size = 20)
+        {
+            return Ok(await _Exams.GetExamsForStudents());
+        }
         [HttpGet("{id}")]
         [Authorize(Roles.Admin+","+ Roles.Student)]
         public async Task<IActionResult> Get(int id)

@@ -217,6 +217,31 @@ namespace OnlineTeacher.Services.Exams
             return Exams.Items.Select(ConvertToExamViewModelWithLecture);
 
         }
+        public async Task<IEnumerable<LectureExamStudentDetailViewModel>> GetExamsForStudents()
+        {
+
+            var Report = await _Exams.GetListAsync(include: e => e.Include(s => s.StudentExams).ThenInclude(s => s.Student).Include(E => E.Lecture));
+            return Report.Items.Select(ConvertToLectureExamStudentDetailViewModel).Where(s => s is not null);
+        }
+
+        private LectureExamStudentDetailViewModel ConvertToLectureExamStudentDetailViewModel(Exam Exam)
+        {
+            if (Exam.StudentExams == null || Exam.StudentExams.Count() == 0)
+                return null;
+            if (Exam.StudentExams.FirstOrDefault()?.Student == null)
+                return null;
+            if (Exam.Lecture == null)
+                return null;
+            LectureExamStudentDetailViewModel detailViewModel = new LectureExamStudentDetailViewModel();
+            detailViewModel.Degree = Exam.Degree;
+            detailViewModel.ExamName = Exam.Name;
+            detailViewModel.ExamPeriod = Exam.DateAndExamminationExpireTime.ToString("HH:mm:ss");
+detailViewModel.SubmitTime = Exam.StudentExams.FirstOrDefault().SubmitTime;
+            detailViewModel.LectureName = Exam.Lecture.Name;
+            detailViewModel.PhoneNumber = Exam.StudentExams.FirstOrDefault().Student.Phone;
+            detailViewModel.StudentName = Exam.StudentExams.FirstOrDefault().Student.Name;
+            return detailViewModel;
+        }
 
         #endregion
     }

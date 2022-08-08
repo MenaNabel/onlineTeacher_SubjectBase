@@ -13,6 +13,7 @@ namespace OnlineTeacher.DataAccess.Context
         public int ID { get; set; }
         public string Name { get; set; }
         [Phone]
+        [Required]
         public string Phone { get; set; }
         public string City { get; set; }
         [Required]

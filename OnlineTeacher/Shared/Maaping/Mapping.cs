@@ -17,6 +17,8 @@ using OnlineTeacher.ViewModels.Subscribtions;
 using OnlineTeacher.ViewModels.Lecture.Helper;
 using OnlineTeacher.ViewModels.Exams.Helper;
 using OnlineTeacher.ViewModels.Home;
+using OnlineTeacher.ViewModels.Lecture.share;
+using OnlineTeacher.DataAccess.Context.Bridge;
 
 namespace OnlineTeacher.Shared.Maaping
 {
@@ -84,6 +86,7 @@ namespace OnlineTeacher.Shared.Maaping
             #endregion
             CreateMap<SiteInfoViewModel, SiteInfo>().ReverseMap();
             CreateMap<HonerListItemViewModel, HonerList>().ReverseMap();
+            CreateMap<Watching, ReOpenLectureDetailsViewModel>().ReverseMap();
 
 
         }

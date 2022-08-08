@@ -14,6 +14,7 @@ namespace OnlineTeacher.Services.Exams.Helper
         Task<ExamCorrectionViewModel> Re_ExamCorrection(ExamCorrectionViewModel examCorrection);
         Task<bool> ReOpenExam(ReOpenExamViewModel reOpenExamView);
         Task<IEnumerable<Grades>> GradesProgress(int studentID);
+        Task<IEnumerable<LectureExamDetailViewModel>> GetExamsForCurrentStudent();
 
 
     }

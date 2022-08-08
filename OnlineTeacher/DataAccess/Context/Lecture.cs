@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineTeacher.DataAccess.Context.Bridge;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,5 +26,6 @@ namespace OnlineTeacher.DataAccess.Context
         public Subject Subject { get; set; }       
         public Lecture previousLecture { get; set; }
         public LectureDetails File { get; set; }
+      
     }
 }

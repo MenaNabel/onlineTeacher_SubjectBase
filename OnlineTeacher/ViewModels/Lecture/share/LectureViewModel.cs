@@ -1,4 +1,5 @@
-﻿using OnlineTeacher.ViewModels.Exams.Helper;
+﻿using OnlineTeacher.DataAccess.Context.Bridge;
+using OnlineTeacher.ViewModels.Exams.Helper;
 using OnlineTeacher.ViewModels.Lecture.Helper;
 using System;
 
@@ -12,6 +13,7 @@ namespace OnlineTeacher.ViewModels.Lecture
         public string Description { get; set; }
         public string Type { get; set; }
         public DateTime DateTime { get; set; }
+        public int watchingCount { get; set; }
         public SubjectHelperViewModel Subject { get; set; }
         public LectureHelperViewModel previousLecture { get; set; }
         public int ExamID { get; set; }

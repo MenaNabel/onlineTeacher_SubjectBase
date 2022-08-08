@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.DataAccess.Context.Bridge;
 using OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures;
 using OnlineTeacher.Services.Lectures.Helper;
 using OnlineTeacher.Services.Subjects.Helper;
@@ -30,7 +31,10 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         Task<Lecture> Get(int ID);
         Task<LectureResponseManger> Update(AddLectureViewModel lec, LectureType type);
         Task<FileResponse> GetFile(int LectureID);
-        bool ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture);
+        Task<bool> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture);
+        Task<IPaginate<ReOpenLectureDetailsViewModel>> GetReOpenLectureRequest(int index=0, int size=20);
+        Task<bool> ConfirmReOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture);
+       
     }
     
     public  class LectureServices : ILectureServices
@@ -40,11 +44,23 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         private IDeleteRepository<Lecture> _DeleteLectures;
         private IMapper _mapper;
         private IFileImageUploading _fileImageUploading;
-    
-      
+        private IWatcher _Watcher;
+        private IUserServices _user;
+
 
         List<(LectureType Type, Func<AddLectureViewModel, Lecture> func)> _ConvertToLecture;
+        public LectureServices(ILectureRepo Lectures, IDeleteRepository<Lecture> DeleteLectures, IMapper mapper, IFileImageUploading fileImageUploading, ISubjectAsync Subject, IWatcher watcher , IUserServices user)
+        {
 
+            _Lectures = Lectures;
+            _DeleteLectures = DeleteLectures;
+            _mapper = mapper;
+            _fileImageUploading = fileImageUploading;
+            _Subject = Subject;
+            _Watcher = watcher;
+            _user = user;
+            SetDefaultConfiguration();
+        }
 
 
         #region Helper
@@ -74,10 +90,11 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         }
 
        
-        private StudeingLectureViewModel ConvertLectureToStudingLecture(Lecture entity)
+        private StudeingLectureViewModel ConvertLectureToStudingLecture(Lecture entity , int watchingCount =0)
         {
 
             var lecture = _mapper.Map<StudeingLectureViewModel>(entity);
+            lecture.watchingCount = watchingCount;
             return lecture;
         }
         private bool UploadFile(Lecture lecture, IFileImage fileImage)
@@ -98,17 +115,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         }
 
         #endregion
-        public LectureServices(ILectureRepo Lectures, IDeleteRepository<Lecture> DeleteLectures, IMapper mapper, IFileImageUploading fileImageUploading, ISubjectAsync Subject )
-        {
-            
-            _Lectures = Lectures;
-            _DeleteLectures = DeleteLectures;
-            _mapper = mapper;
-            _fileImageUploading = fileImageUploading;
-            _Subject = Subject;
-          
-            SetDefaultConfiguration();
-        }
+      
 
         public async Task<bool> Delete(int ID){
             // get lecture 
@@ -204,11 +211,16 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             
         
             var lecture = await _Lectures.SingleOrDefaultWithoutFile(lec => lec.ID == ID && lec.Type == type.ToString(), include: Lec => Lec.Include(le => le.Subject));
-           
-            return DetectType(lecture, type);
+           int studentId=  _user.GetStudentID();
+         var watching=  await  _Watcher.GetWatching(studentId, ID);
+            if(watching is null)
+            {
+                return DetectType(lecture, type);
+            }
+            return DetectType(lecture, type , watching.WatchingCount);
 
         }
-        private LectureViewModel DetectType(Lecture lecture, LectureType type)
+        private LectureViewModel DetectType(Lecture lecture, LectureType type, int watchingCount = 0)
         {
             if (lecture is null)
                 return null;
@@ -216,7 +228,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
 
             if (type == LectureType.studying)
             {
-                return  ConvertLectureToStudingLecture(lecture);
+                return  ConvertLectureToStudingLecture(lecture, watchingCount);
             }
             else
             {
@@ -248,8 +260,9 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         public async Task<Lecture> Get(int ID)
         {
             var lecture = await _Lectures.SingleOrDefaultWithoutFile(lec => lec.ID == ID ,include: l=>l.Include(le=>le.previousLecture));
-
-            return lecture is not null ? lecture : null;
+            if (lecture == null)
+                 return null;
+            return lecture ;
         }
         #region Updates
         public async Task<LectureResponseManger> Update(AddLectureViewModel lec , LectureType type)
@@ -365,10 +378,53 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             }
             return Response; 
         }
-
-        public bool ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
+        /// <summary>
+        /// student Request Ro open Lecture To Wtching 
+        /// </summary>
+        /// <param name="reOpenLecture">
+        ///     Lecture ID 
+        ///     Current Student ID request 
+        ///     Reason to re open watching
+        /// </param>
+        /// <returns></returns>
+        public async Task<bool> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
         {
-            throw new NotImplementedException();
+            var studentID = _user.GetStudentID();
+            if (studentID == 0)
+                return false;
+            var Watcher = await _Watcher.GetWatching(studentID, reOpenLecture.LectureID);
+            if (Watcher == null)
+                return false;
+
+            Watcher.ReOpenRequest(reOpenLecture.Reason);
+            return _Watcher.Update(Watcher);
+
+        }
+        public async Task<IPaginate<ReOpenLectureDetailsViewModel>> GetReOpenLectureRequest(int index = 0 , int size =20)
+        {
+           return await _Watcher.GetRequests(index , size);   
+        }
+            /// <summary>
+            /// Teacher Confirm To open Re Watching 
+            /// </summary>
+            /// <param name="reOpenLecture"></param>
+            /// <returns></returns>
+        public async Task<bool> ConfirmReOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture)
+        {
+            if (reOpenLecture is null)
+                return false;
+            var Watcher = await _Watcher.GetWatching(reOpenLecture.StudentID, reOpenLecture.LectureID);
+            if (Watcher == null)
+                return false;
+            if (!reOpenLecture.IsConfirmed)
+                return false;
+
+
+            Watcher.ConfirmReOpenRequest();
+           return _Watcher.Update(Watcher);
+            
+
+          
         }
     }
 

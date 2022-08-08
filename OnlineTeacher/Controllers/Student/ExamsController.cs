@@ -60,5 +60,10 @@ namespace OnlineTeacher.Controllers.Student
             var Exam = await _Exams.ReOpenExam(exam);
             return Exam is true ? Ok("تم الطلب بنجاح") : BadRequest("يوجد مشكله في اعاده فتح الامتحان");
         }
+        [HttpGet("MyExams")]
+        public async Task<IActionResult> GetMyExams()
+        {
+            return Ok(await _Exams.GetExamsForCurrentStudent());
+        }
     }
 }

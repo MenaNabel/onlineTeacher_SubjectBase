@@ -26,6 +26,7 @@ namespace OnlineTeacher.DataAccess.Context
         public bool IsActive { get; set; } = false;
         public string Reason { get; set; }
         public bool HaveRequest { get; set; } = false;
+        public DateTime SubmitTime { get; set; }
         [Required]
         public bool IsPassed { get; set; }
         public string ExamType { get; set; }

@@ -21,5 +21,6 @@ namespace OnlineTeacher.Services.Exams.Helper
         Task<bool> AcceptReOpenExam(ReopenExamFeedback reopenExam);
         Task<IEnumerable<ExamViewModelWithLecture>> Filter(Expression<Func<Exam, bool>> FilterCondition);
         Task<IEnumerable<ReOpenExamDetailsViewModel>> GetReOpenExamRequests();
+        Task<IEnumerable<LectureExamStudentDetailViewModel>> GetExamsForStudents();
     }
 }

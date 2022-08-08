@@ -13,12 +13,16 @@ namespace OnlineTeacher.DataAccess.Context.Bridge
         [Key]
         [ForeignKey(nameof(Student))]
         [Column(Order = 1)]
+        [Required]
         public int StudentID { get; set; }
         [Key]
         [ForeignKey(nameof(Lecture))]
         [Column(Order = 2)]
+        [Required]
         public int LectureID { get; set; }
-        public int WatchingCount { get; set; }
+        public int WatchingCount { get; set; } = 0;
+        public bool HaveRequest { get; set; } = false;
+        public string Reason { get; set; }
         public Student Student { get; set; }
         public Lecture Lecture { get; set; }
 
@@ -36,7 +40,7 @@ namespace OnlineTeacher.DataAccess.Context.Bridge
             }
             return false;
         }
-        public bool ReOpenWatching() 
+        private bool ReOpenWatching() 
         {
             if (!AllowToWatch())
             {
@@ -44,6 +48,23 @@ namespace OnlineTeacher.DataAccess.Context.Bridge
                 return true;
             }
             return false;
+        }
+        public bool ConfirmReOpenRequest()
+        {
+          
+            if(ReOpenWatching())
+            {
+                HaveRequest = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ReOpenRequest(string reason)
+        {
+            Reason = reason;
+            HaveRequest = true;
         }
     }
 }

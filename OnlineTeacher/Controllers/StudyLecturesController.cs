@@ -38,13 +38,29 @@ namespace OnlineTeacher.Controllers
             return Ok(Lectures);
         }
 
-        [HttpGet("Request_Open_Watching")]
+        [HttpPost("Request_Open_Watching")]
         public async Task<IActionResult> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
         {
-            if (_lectures.ReOpenWatchingRequest(reOpenLecture))
+            if ( await  _lectures.ReOpenWatchingRequest(reOpenLecture))
                 return Ok("Request Successfuly");
             return BadRequest("we Have a Problem please try again");
            
+        }
+        [HttpPost("Confirm_OpenWatching")]
+        public async Task<IActionResult> ConfirmOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture)
+        {
+            if (await _lectures.ConfirmReOpenWatching(reOpenLecture))
+                return Ok("Confirmed Successfuly");
+            return BadRequest("we Have a Problem please try again");
+
+        }
+        [HttpGet("Get_ReOpenWatchingRequests")]
+        public async Task<IActionResult> GetReOpenWatchingRequests(int index =0, int size =0)
+        {
+            var requests = await _lectures.GetReOpenLectureRequest(index ,size);
+                return Ok(requests);
+           
+
         }
         //[HttpGet("DownloadInfo")]
         //[Authorize(Roles = Roles.Admin)]
