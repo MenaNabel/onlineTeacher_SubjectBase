@@ -54,20 +54,20 @@ namespace OnlineTeacher.Shared.Services
         #region  User Data Services
         public  int GetStudentID()
         {
-            //_httpContextAccessor = GetHttpContextAccessor();
-            //var St = _httpContextAccessor.HttpContext?.User.FindFirstValue(CustomeClaim.StudentID);
-            //if (string.IsNullOrEmpty(St) || St == "0")
-            //{
+            _httpContextAccessor = GetHttpContextAccessor();
+            var St = _httpContextAccessor.HttpContext?.User.FindFirstValue(CustomeClaim.StudentID);
+            if (string.IsNullOrEmpty(St) || St == "0")
+            {
 
-            //    _Student = _services.GetRequiredService<IStudentAsync>();
-            //    var student = _Student.GetAsyncWithoutValidate(GetCurrentUserID());
-            //    student.Wait();
-            //    if (student is null)
-            //        return 0;
-            //    return student.Result.ID;
-            //}
-            //return int.Parse(St);
-            return 3;
+                _Student = _services.GetRequiredService<IStudentAsync>();
+                var student = _Student.GetAsyncWithoutValidate(GetCurrentUserID());
+                student.Wait();
+                if (student is null)
+                    return 0;
+                return student.Result.ID;
+            }
+            return int.Parse(St);
+
         }
         public string GetCurrentUserID()
         {
