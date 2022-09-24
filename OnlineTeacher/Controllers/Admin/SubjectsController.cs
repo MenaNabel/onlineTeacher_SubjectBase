@@ -56,7 +56,7 @@ namespace OnlineTeacher.Controllers.Admin
             return NoContent();
         }
         [HttpGet("{id}")]
-        [Authorize(Roles = Roles.Admin+","+Roles.Student)]
+        //[Authorize(Roles = Roles.Admin+","+Roles.Student)]
         public async Task<IActionResult> Get(int id)
         {
           var Subject = await _subjects.GetAsync(id);
