@@ -46,7 +46,8 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
                                       IsActive = Subscribe.IsActive,
                                       LevelID = Subj.LevelID,
                                       Date = Subscribe.DataAndTime,
-                                     StudentID = Student.ID
+                                     StudentID = Student.ID,
+                                     Phone = Student.Phone
                                  }).OrderByDescending(SubDetailes=>SubDetailes.Date).ToPaginate(index , size);
 
             

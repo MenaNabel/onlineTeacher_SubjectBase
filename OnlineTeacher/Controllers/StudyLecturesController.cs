@@ -39,6 +39,7 @@ namespace OnlineTeacher.Controllers
         }
 
         [HttpPost("Request_Open_Watching")]
+        [Authorize(Roles =Roles.Student)]
         public async Task<IActionResult> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
         {
             if ( await  _lectures.ReOpenWatchingRequest(reOpenLecture))
@@ -47,6 +48,7 @@ namespace OnlineTeacher.Controllers
            
         }
         [HttpPost("Confirm_OpenWatching")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ConfirmOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture)
         {
             if (await _lectures.ConfirmReOpenWatching(reOpenLecture))
@@ -55,6 +57,7 @@ namespace OnlineTeacher.Controllers
 
         }
         [HttpGet("Get_ReOpenWatchingRequests")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> GetReOpenWatchingRequests(int index =0, int size =0)
         {
             var requests = await _lectures.GetReOpenLectureRequest(index ,size);

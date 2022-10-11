@@ -1,4 +1,5 @@
-﻿using OnlineTeacher.DataAccess;
+﻿using Microsoft.AspNetCore.Http;
+using OnlineTeacher.DataAccess;
 using OnlineTeacher.Shared.ViewModel;
 using OnlineTeacher.ViewModels.Identity.Login;
 using OnlineTeacher.ViewModels.Identity.Regiesteration;
@@ -35,5 +36,6 @@ namespace OnlineTeacher.Shared.Interfaces
         Task<UserMangerResonse> ResetPasswordAsync(ResetPasswordViewModel model);
         Task<UserMangerResonse> changePasswordAsync(ChangePasswordViewModel model);
         Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model);
+         NetworkViewMode GetVisitorIp(HttpContext context);
     }
 }

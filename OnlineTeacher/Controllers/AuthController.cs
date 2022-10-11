@@ -218,7 +218,14 @@ namespace OnlineTeacher.Controllers
 
             return BadRequest("Some properties are not valid");
         }
-        
+        [HttpGet("GetCurrentIP")]
+        public  IActionResult GetCuurentIP()
+        {
+
+          var ip =  _user.GetVisitorIp(HttpContext);
+            return Ok(ip);
+        }
+
 
     }
 }

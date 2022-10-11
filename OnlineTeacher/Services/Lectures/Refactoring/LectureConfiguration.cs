@@ -497,7 +497,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return await checkAvilabilityWatching_And_AddExamIfNotFound(lec, CurrentLectureExam, studentID);
 
              // Get Exam For previous Lecture 
-             var exam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.previousLecture.LectureID, include: e => e.Include(e => e.StudentExams.Where(E => E.StudentID == studentID)));
+             var exam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.previousLecture.ID, include: e => e.Include(e => e.StudentExams.Where(E => E.StudentID == studentID)));
             // check not found exams for privuios lecture or passing Exam 
             if (exam is null || checkPassingExam(exam)) 
                 return await checkAvilabilityWatching_And_AddExamIfNotFound(lec, CurrentLectureExam, studentID);
