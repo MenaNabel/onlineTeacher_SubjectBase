@@ -23,13 +23,14 @@ begin
 
 end;
 create trigger tr_tblSiteInfo_ForInsertingFile
-on Lectures
+on LectureDetails
 For insert 
 as
 begin 
 	
 	update siteinfo
 	set FilesCount = FilesCount+1;
+	
 
 
 end;
@@ -66,7 +67,7 @@ begin
 
 end;
 create trigger tr_tblSiteInfo_FordelteingFile
-on Lectures
+on LectureDetails
 For delete 
 as
 begin 
