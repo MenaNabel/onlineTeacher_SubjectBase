@@ -130,5 +130,12 @@ namespace OnlineTeacher.Controllers
 
             return IsDeleted is true ? Ok("تم الحذف  بنجاح ") : BadRequest();
         }
+
+        [HttpGet("filter")]
+        [AllowAnonymous]
+        public async Task<IActionResult> filter(string Name = "") 
+        {
+            return Ok(await _lectures.filter(lec => lec.Name.Contains(Name)));
+        }
     }
 }

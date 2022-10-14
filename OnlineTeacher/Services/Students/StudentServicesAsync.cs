@@ -10,6 +10,7 @@ using OnlineTeacher.ViewModels.Levels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Threenine.Data;
 using Threenine.Data.Paging;
@@ -159,6 +160,23 @@ namespace OnlineTeacher.Services.Students
                 var ID = _User.GetStudentID();
                 var Student = await _Students.SingleOrDefaultAsync(S => S.UserID == UserID, include: St => St.Include(s => s.Level).Include(s => s.Subscriptions.Where(sub => sub.StudentID == ID)));
                 return Student is not null ? Student : null;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+        }
+        public async Task<IEnumerable<StudentViewModelWithoutImage>> filter(Expression<Func<Student, bool>> filter)
+        {
+            return await Get(filter); 
+        }
+        private async Task<IEnumerable<StudentViewModelWithoutImage>> Get(Expression<Func<Student , bool>> filter)
+        {
+            try
+            {
+                var Students = await _Students.GetListAsync(st => new StudentViewModelWithoutImage { ID = st.ID , LevelID = st.LevelID , Name = st.Name ,Phone = st.Phone , City = st.City , Email = st.Email} , filter, include: St => St.Include(s => s.Level));
+                return Students.Items ;
             }
             catch (Exception ex)
             {

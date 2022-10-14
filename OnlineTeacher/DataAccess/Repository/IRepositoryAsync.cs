@@ -42,10 +42,20 @@ namespace Threenine.Data
             int size = 100000,
             bool enableTracking = true,
             CancellationToken cancellationToken = default);
-
+        Task<IPaginate<TResult>> GetListAsync<TResult>(Expression<Func<T, TResult>> selector,
+              Expression<Func<T, bool>> predicate = null,
+              Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+              Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+              int index = 0,
+              int size = 20,
+              bool enableTracking = true,
+              CancellationToken cancellationToken = default,
+              bool ignoreQueryFilters = false) where TResult : class;
+              
+  
         #region Insert Functions
 
-        ValueTask<EntityEntry<T>> InsertAsync(T entity,
+          ValueTask<EntityEntry<T>> InsertAsync(T entity,
             CancellationToken cancellationToken = default);
 
         Task InsertAsync(params T[] entities);

@@ -13,6 +13,7 @@ using OnlineTeacher.ViewModels.Subscribtions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Threenine.Data;
 using Threenine.Data.Paging;
@@ -107,7 +108,11 @@ namespace OnlineTeacher.Services.Subscriptions
             return Subscribtion.Select(ConvertToSubscribitionViewModel);
         }
 
-
+        public async Task<IEnumerable<SubscriptionViewModel>> filter(Expression<Func<Student, bool>> FilterCondition)
+        {
+            var Subscribtion = await _Subscribtions.GetSubscrbtionsForStudnet(FilterCondition);
+            return Subscribtion.Select(ConvertToSubscribitionViewModel);
+        }
 
         public IEnumerable<SubscriptionViewModel> GetSubscrbtionsNotAccepeted()
         {

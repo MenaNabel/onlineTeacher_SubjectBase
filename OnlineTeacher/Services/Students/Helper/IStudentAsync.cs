@@ -1,8 +1,10 @@
-﻿using OnlineTeacher.Shared.Interfaces;
+﻿using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.Shared.Interfaces;
 using OnlineTeacher.ViewModels.Students;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace OnlineTeacher.Services.Students.Helper
@@ -12,5 +14,6 @@ namespace OnlineTeacher.Services.Students.Helper
         Task<bool> Update(UpdatedStudnetViewModel studentviewModel);
         Task<StudentViewModel> GetAsync();
         Task<StudentViewModel> GetAsyncWithoutValidate(string UserID);
+        Task<IEnumerable<StudentViewModelWithoutImage>> filter(Expression<Func<Student, bool>> filter);
     }
 }

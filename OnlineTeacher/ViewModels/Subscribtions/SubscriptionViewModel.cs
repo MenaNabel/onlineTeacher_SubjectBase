@@ -13,6 +13,7 @@ namespace OnlineTeacher.ViewModels.Subscribtions
         public string SubjectName { get; set; }
         public bool IsActive { get; set; }
         public int LevelID { get; set; }
+        public string Phone { get; set; }
         public DateTime Date { get; internal set; }
     }
 }

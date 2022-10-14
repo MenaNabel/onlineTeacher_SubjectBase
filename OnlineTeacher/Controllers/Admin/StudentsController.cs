@@ -48,7 +48,20 @@ namespace OnlineTeacher.Controllers.Admin
         //    }
         //    return BadRequest(ModelState);
         //}
-
+        [HttpGet("filter")]
+        // [Authorize(Roles = Roles.Admin)]
+        [AllowAnonymous]
+        public async Task<IActionResult> filter(string studentName = "" , string phone = "")
+        {
+            try
+            {
+                return Ok(await _Student.filter(st => st.Name.Contains(studentName) && st.Phone.Contains(phone)));
+            }
+            catch
+            {
+                return NotFound();  
+            }
+        }
       
         [HttpPut]
         [Authorize(Roles.Student)]

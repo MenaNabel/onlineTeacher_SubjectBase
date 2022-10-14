@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,9 +13,15 @@ namespace OnlineTeacher.DataAccess.Context
         [Key]
         public int ID { get; set; }
         public string Name { get; set; }
+
+       
         [Phone]
         [Required]
-        public string Phone { get; set; }
+        [DefaultValue("")]
+        public string Phone {
+            get;
+            set;
+        }
         public string City { get; set; }
         [Required]
         public string UserID { get; set; }

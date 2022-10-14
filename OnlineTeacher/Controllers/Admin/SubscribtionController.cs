@@ -78,6 +78,27 @@ namespace OnlineTeacher.Controllers.Admin
             }
         }
 
+        [HttpGet("Filter")]
+        [Authorize(Roles.Admin)]
+       
+        public async Task<IActionResult> Filter(string studentName ="" , string phone ="")
+        {
+            try
+            {
+                return Ok(await _Subscribtion.filter(st=>st.Name.Contains(studentName) && st.Phone.Contains(phone)));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+
+                return Unauthorized();
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddSubscibtionViewModel Subscibtion)
