@@ -24,7 +24,7 @@ namespace OnlineTeacher.Controllers.Admin
         }
         [HttpGet()]
         [Authorize(Roles.Admin)]
-        public async Task<IActionResult> GetAll(int index =0 , int size=20)
+               public async Task<IActionResult> GetAll(int index =0 , int size=20)
         {
             return Ok(await _Student.GetAll(index, size));
         }

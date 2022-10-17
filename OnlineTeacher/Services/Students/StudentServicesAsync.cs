@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Threenine.Data;
 using Threenine.Data.Paging;
+using System.Security.Cryptography;
 
 namespace OnlineTeacher.Services.Students
 {
@@ -24,16 +25,16 @@ namespace OnlineTeacher.Services.Students
         private readonly IMapper _Mapper;
         private readonly IUserServices _User;
         private readonly IFileImageUploading _ImageUploading;
-        //private readonly OnlineExamContext _context;
+        private readonly OnlineExamContext _context;
        
         public StudentServicesAsync(IRepositoryAsync<Student> Student, IMapper Mapper, IUserServices user,
-            IFileImageUploading ImageUploading)// OnlineExamContext context)
+            IFileImageUploading ImageUploading ,OnlineExamContext context)
         {
             _Students = Student;
             _Mapper = Mapper;
             _User = user;
             _ImageUploading = ImageUploading;
-           // _context = context;
+            _context = context;
         }
         public async Task<AddedStudentViewModel> Add(AddedStudentViewModel studentViewModel)
         {
@@ -54,6 +55,8 @@ namespace OnlineTeacher.Services.Students
 
         public async Task<IPaginate<StudentViewModel>> GetAll(int index , int size)
         {
+           
+                     
             var Students = await _Students.GetListAsync(include: St => St.Include(s => s.Level),index:index , size:size);
             return new Paginate<Student, StudentViewModel>(Students, s => s.Select(st => ConvertToStudentViewModel(st)));
             

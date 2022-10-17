@@ -34,9 +34,9 @@ namespace OnlineTeacher.Controllers.Student
         }
         [HttpGet("Grades/{id}")]
         [Authorize(Roles.Student)]
-        public async Task<IActionResult> Grades(int id)
+        public async Task<IActionResult> Grades(int Studentid)
         {
-            var Exam = await _Exams.GradesProgress(id);
+            var Exam = await _Exams.GradesProgress(Studentid);
             return Exam is null ? NotFound("لا يوجد امتحانات حتي الان") : Ok(Exam);
         }
         [HttpPost]
