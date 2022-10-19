@@ -24,7 +24,7 @@ namespace OnlineTeacher.Controllers.Admin
         }
         [HttpGet()]
         [Authorize(Roles.Admin)]
-        public async Task<IActionResult> GetAll(int index =0 , int size=20)
+               public async Task<IActionResult> GetAll(int index =0 , int size=20)
         {
             return Ok(await _Student.GetAll(index, size));
         }
@@ -48,7 +48,20 @@ namespace OnlineTeacher.Controllers.Admin
         //    }
         //    return BadRequest(ModelState);
         //}
-
+        [HttpGet("filter")]
+        // [Authorize(Roles = Roles.Admin)]
+        [AllowAnonymous]
+        public async Task<IActionResult> filter(string studentName = "" , string phone = "")
+        {
+            try
+            {
+                return Ok(await _Student.filter(st => st.Name.Contains(studentName) && st.Phone.Contains(phone)));
+            }
+            catch
+            {
+                return NotFound();  
+            }
+        }
       
         [HttpPut]
         [Authorize(Roles.Student)]

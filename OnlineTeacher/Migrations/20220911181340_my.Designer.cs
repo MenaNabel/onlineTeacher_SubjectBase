@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineTeacher.DataAccess;
 
 namespace OnlineTeacher.Migrations
 {
     [DbContext(typeof(OnlineExamContext))]
-    partial class OnlineExamContextModelSnapshot : ModelSnapshot
+    [Migration("20220911181340_my")]
+    partial class my
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -694,12 +696,6 @@ namespace OnlineTeacher.Migrations
             modelBuilder.Entity("OnlineTeacher.DataAccess.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("MacAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MacAddress2")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

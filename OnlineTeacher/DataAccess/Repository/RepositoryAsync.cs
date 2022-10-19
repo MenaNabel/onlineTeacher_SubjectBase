@@ -95,7 +95,7 @@ namespace Threenine.Data
             bool enableTracking = true,
             CancellationToken cancellationToken = default,
             bool ignoreQueryFilters = false)
-            where TResult : class
+            where TResult  : class
         {
             IQueryable<T> query = _dbSet;
 

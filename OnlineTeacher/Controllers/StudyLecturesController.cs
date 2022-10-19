@@ -39,7 +39,7 @@ namespace OnlineTeacher.Controllers
         }
 
         [HttpPost("Request_Open_Watching")]
-        [Authorize(Roles = Roles.Student)]
+        [Authorize(Roles =Roles.Student)]
         public async Task<IActionResult> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture)
         {
             if ( await  _lectures.ReOpenWatchingRequest(reOpenLecture))
@@ -48,7 +48,7 @@ namespace OnlineTeacher.Controllers
            
         }
         [HttpPost("Confirm_OpenWatching")]
-        [Authorize(Roles =Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ConfirmOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture)
         {
             if (await _lectures.ConfirmReOpenWatching(reOpenLecture))
@@ -129,6 +129,13 @@ namespace OnlineTeacher.Controllers
             var IsDeleted = await _lectures.Delete(id);
 
             return IsDeleted is true ? Ok("تم الحذف  بنجاح ") : BadRequest();
+        }
+
+        [HttpGet("filter")]
+        [AllowAnonymous]
+        public async Task<IActionResult> filter(string Name = "") 
+        {
+            return Ok(await _lectures.filter(lec => lec.Name.Contains(Name)));
         }
     }
 }

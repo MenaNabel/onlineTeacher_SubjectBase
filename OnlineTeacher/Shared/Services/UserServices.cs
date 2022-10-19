@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -88,14 +89,21 @@ namespace OnlineTeacher.Shared.Services
         {
             return _services.GetRequiredService<IHttpContextAccessor>();
         }
-        private string GetVisitorIp()
+        
+        private NetworkViewMode GetVisitorIp()
         {
-          _NetworkHandeler =  _services.GetRequiredService<INetwork>();
-          return  _NetworkHandeler.GetVisitorIp();
+          
+            _NetworkHandeler =  _services.GetRequiredService<INetwork>();
+
+            return _NetworkHandeler.GetVisitorIp();
+
         }
+        public NetworkViewMode GetVisitorIp(HttpContext context)
+        {
 
+            _NetworkHandeler =  _services.GetRequiredService<INetwork>();
 
-        #endregion
+            return _NetworkHandeler.GetVisitorIp(context);
 
         //public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
         //{
@@ -115,6 +123,18 @@ namespace OnlineTeacher.Shared.Services
         //        return new UserMangerResonse("not deleted successfuly", false);
         //    }
         //    return new UserMangerResonse("not found ip", false);
+        //}
+        //    if (user.DeleteIp())
+                
+        //        if (await Update(user))
+        //            return new UserMangerResonse("changed successfuly", true);
+
+        //        else
+        //            return new UserMangerResonse("not updated successfuly", true);
+
+        //    return new UserMangerResonse("not deleted successfuly", false);
+
+
         //}
         public async Task<UserMangerResonse> RegiesterUserAsync(RegiesterViewModel model)
         {
@@ -192,21 +212,22 @@ namespace OnlineTeacher.Shared.Services
             //if(!user.EmailConfirmed)
             //    return new UserMangerResonse("Email Not Confirmed", false);
 
-            #region Validation IPs
+            //#region Validation IPs
 
-            string Ip = GetVisitorIp();
-            if (!user.IsAssignedIp(Ip))
-            {
-                if (!user.Assign(Ip))
-                    return new UserMangerResonse("Invalid Ip", false);
-                if (!await Update(user))
-                {
-                    return new UserMangerResonse("have a problem please try again", false);
-                }
-            }
+           
+            //NetworkViewMode NetworkInfo = GetVisitorIp();
+            //if (!user.IsAssignedIp(NetworkInfo))
+            //{
+            //    if (!user.Assign(NetworkInfo))
+            //        return new UserMangerResonse("Invalid Ip", false);
+            //    if (!await Update(user))
+            //    {
+            //        return new UserMangerResonse("have a problem please try again", false);
+            //    }
+            //}
 
 
-            #endregion
+            //#endregion
 
             // get user Role
             var Role = await GetRoleAsync(user);

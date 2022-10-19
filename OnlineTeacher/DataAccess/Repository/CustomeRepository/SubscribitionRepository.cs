@@ -46,7 +46,8 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
                                       IsActive = Subscribe.IsActive,
                                       LevelID = Subj.LevelID,
                                       Date = Subscribe.DataAndTime,
-                                     StudentID = Student.ID
+                                     StudentID = Student.ID,
+                                     Phone = Student.Phone
                                  }).OrderByDescending(SubDetailes=>SubDetailes.Date).ToPaginate(index , size);
 
             
@@ -149,6 +150,33 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
                                  SubjectID = Subject.ID,
                                  IsActive = StudentSubscribtion.Subscribe.IsActive,
                                  LevelID = Subject.LevelID,
+                                 Phone = StudentSubscribtion.Student.Phone ,
+                                 Date = StudentSubscribtion.Subscribe.DataAndTime
+                             }).OrderByDescending(SubDetailes => SubDetailes.Date).ToListAsync();
+
+            return await JoinedResult;
+        }
+        public async Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(Expression<Func<Student, bool>> FilterCondition)
+        {
+            
+
+            var JoinedResult = _dbContext.Student.Where(FilterCondition).
+                     Join(_dbSet,
+                             Stud => Stud.ID,
+                             Subscribe => Subscribe.StudentID,
+                             (Student, Subscribe) => new { Student = Student, Subscribe = Subscribe }).
+                     Join(_dbContext.Subjects,
+                             Subscribtion => Subscribtion.Subscribe.SubjectID,
+                             Subject => Subject.ID,
+                             (StudentSubscribtion, Subject) => new SubscribitionDetails
+                             {
+                                 StudentID = StudentSubscribtion.Student.ID,
+                                 StudentName = StudentSubscribtion.Student.Name,
+                                 SubjectName = Subject.Name,
+                                 SubjectID = Subject.ID,
+                                 IsActive = StudentSubscribtion.Subscribe.IsActive,
+                                 LevelID = Subject.LevelID,
+                                 Phone = StudentSubscribtion.Student.Phone,
                                  Date = StudentSubscribtion.Subscribe.DataAndTime
                              }).OrderByDescending(SubDetailes => SubDetailes.Date).ToListAsync();
 

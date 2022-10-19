@@ -3,7 +3,7 @@ using OnlineTeacher.DataAccess.HelperConntext;
 using OnlineTeacher.ViewModels.Subscribtions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Threenine.Data.Paging;
 
@@ -23,6 +23,7 @@ namespace OnlineTeacher.Services.Subscriptions.Helper
         Task<SubscrptionResponseManger> Active(IEnumerable<UpdateSubscribtionViewModel> subscribtionViewModel);
         Task<SubscrptionResponseManger> Remove(AddSubscibtionViewModel subscribtionViewModel);
         Task<SubscrptionResponseManger> Remove(IEnumerable<AddSubscibtionViewModel> subscribtionViewModel);
+        Task<IEnumerable<SubscriptionViewModel>> filter(Expression<Func<Student, bool>> FilterCondition);
 
 
     }

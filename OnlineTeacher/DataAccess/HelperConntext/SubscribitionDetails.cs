@@ -8,6 +8,7 @@ namespace OnlineTeacher.DataAccess.HelperConntext
     public class SubscribitionDetails
     {
         public int StudentID { get; set; }
+        public string Phone { get; set; }
         public int SubjectID { get; set; }
         public string StudentName { get; set; }
         public string SubjectName { get; set; }

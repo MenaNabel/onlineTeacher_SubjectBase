@@ -65,7 +65,7 @@ namespace OnlineTeacher
         
             // config the identity user schema and connect to it 
             services.AddDbContext<OnlineExamContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("ServerConnection")));
 
             // config the  identity user and Role
             services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -233,6 +233,7 @@ namespace OnlineTeacher
             app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlineTeacher v1"));
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseCors(MyAllowSpecificOrigins);

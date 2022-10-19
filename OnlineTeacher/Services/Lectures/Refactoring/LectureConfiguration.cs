@@ -14,6 +14,7 @@ using OnlineTeacher.ViewModels.Lecture.share;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Threenine.Data;
 using Threenine.Data.Paging;
@@ -34,7 +35,9 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         Task<bool> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture);
         Task<IPaginate<ReOpenLectureDetailsViewModel>> GetReOpenLectureRequest(int index=0, int size=20);
         Task<bool> ConfirmReOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture);
-       
+        Task<IEnumerable<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter);
+
+
     }
     
     public  class LectureServices : ILectureServices
@@ -218,6 +221,12 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return DetectType(lecture, type);
             }
             return DetectType(lecture, type , watching.WatchingCount);
+
+        }
+        public async Task<IEnumerable<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter) 
+        {
+        var Lectures = await  _Lectures.GetListAsync(filter);
+            return Lectures.Items.Select(ConvertToLectureViewModel);
 
         }
         private LectureViewModel DetectType(Lecture lecture, LectureType type, int watchingCount = 0)
@@ -497,7 +506,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return await checkAvilabilityWatching_And_AddExamIfNotFound(lec, CurrentLectureExam, studentID);
 
              // Get Exam For previous Lecture 
-             var exam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.previousLecture.LectureID, include: e => e.Include(e => e.StudentExams.Where(E => E.StudentID == studentID)));
+             var exam = await _Exams.SingleOrDefaultAsync(e => e.LectureID == lec.previousLecture.ID, include: e => e.Include(e => e.StudentExams.Where(E => E.StudentID == studentID)));
             // check not found exams for privuios lecture or passing Exam 
             if (exam is null || checkPassingExam(exam)) 
                 return await checkAvilabilityWatching_And_AddExamIfNotFound(lec, CurrentLectureExam, studentID);

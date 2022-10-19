@@ -216,8 +216,8 @@ namespace OnlineTeacher.Controllers
         //        return BadRequest(result);
         //    }
 
-        //    return BadRequest("Some properties are not valid");
-        //}
+            return BadRequest("Some properties are not valid");
+        }
         
 
     }
