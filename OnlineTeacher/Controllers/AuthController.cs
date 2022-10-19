@@ -201,23 +201,23 @@ namespace OnlineTeacher.Controllers
 
             return BadRequest("Some properties are not valid");
         }
-        [HttpPost("ChangeIp")]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> ChangeIp([FromBody] ChangeIpViewModel model)
-        {
+        //[HttpPost("ChangeIp")]
+        //[Authorize(Roles = Roles.Admin)]
+        //public async Task<IActionResult> ChangeIp([FromBody] ChangeIpViewModel model)
+        //{
             
-            if (ModelState.IsValid)
-            {
-                var result = await _user.ChangeIP(model);
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = await _user.ChangeIP(model);
 
-                if (result.IsSuccess)
-                    return Ok(result);
+        //        if (result.IsSuccess)
+        //            return Ok(result);
 
-                return BadRequest(result);
-            }
+        //        return BadRequest(result);
+        //    }
 
-            return BadRequest("Some properties are not valid");
-        }
+        //    return BadRequest("Some properties are not valid");
+        //}
         
 
     }

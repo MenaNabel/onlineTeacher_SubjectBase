@@ -97,25 +97,25 @@ namespace OnlineTeacher.Shared.Services
 
         #endregion
 
-        public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
-        {
-            var user = await GetUser(model.Email);
-            if (user is null)
-                return new UserMangerResonse("Invalid email", false);
+        //public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
+        //{
+        //    var user = await GetUser(model.Email);
+        //    if (user is null)
+        //        return new UserMangerResonse("Invalid email", false);
 
-            if (user.IsAssignedIp(model.OldIp))
-            {
-                if (user.DeleteIp(model.OldIp))
-                    if (user.Assign(model.NewIp))
-                    {
-                        if (await Update(user))
-                            return new UserMangerResonse("changed successfuly", true);
-                    }
-                      else  return new UserMangerResonse("not updated successfuly", true);
-                return new UserMangerResonse("not deleted successfuly", false);
-            }
-            return new UserMangerResonse("not found ip", false);
-        }
+        //    if (user.IsAssignedIp(model.OldIp))
+        //    {
+        //        if (user.DeleteIp(model.OldIp))
+        //            if (user.Assign(model.NewIp))
+        //            {
+        //                if (await Update(user))
+        //                    return new UserMangerResonse("changed successfuly", true);
+        //            }
+        //              else  return new UserMangerResonse("not updated successfuly", true);
+        //        return new UserMangerResonse("not deleted successfuly", false);
+        //    }
+        //    return new UserMangerResonse("not found ip", false);
+        //}
         public async Task<UserMangerResonse> RegiesterUserAsync(RegiesterViewModel model)
         {
             // if model not have value throw exception
