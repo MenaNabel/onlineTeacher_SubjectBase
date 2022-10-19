@@ -104,7 +104,7 @@ namespace OnlineTeacher.Shared.Services
             _NetworkHandeler =  _services.GetRequiredService<INetwork>();
 
             return _NetworkHandeler.GetVisitorIp(context);
-
+        }
         //public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
         //{
         //    var user = await GetUser(model.Email);
