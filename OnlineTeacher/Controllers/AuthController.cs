@@ -147,15 +147,15 @@ namespace OnlineTeacher.Controllers
             return BadRequest(result.Errors);
                     
         }
-        [HttpDelete]
+        //[HttpDelete]
         
-        public async Task<IActionResult> Delete(string email)
-        {
-            var res = await _user.DeleteuserByEmail(email);
-            if (res.IsSuccess)
-                return Ok(res);
-            return BadRequest(res);
-        }
+        //public async Task<IActionResult> Delete(string email)
+        //{
+        //    var res = await _user.DeleteuserByEmail(email);
+        //    if (res.IsSuccess)
+        //        return Ok(res);
+        //    return BadRequest(res);
+        //}
         [HttpPost("ForgetPassword")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordViewModel model)
@@ -216,8 +216,8 @@ namespace OnlineTeacher.Controllers
         //        return BadRequest(result);
         //    }
 
-            return BadRequest("Some properties are not valid");
-        }
+        
+       // }
         
 
     }

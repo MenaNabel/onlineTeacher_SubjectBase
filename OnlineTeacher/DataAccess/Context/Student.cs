@@ -16,8 +16,8 @@ namespace OnlineTeacher.DataAccess.Context
 
        
         [Phone]
-        [Required]
-        [DefaultValue("")]
+        //[Required]
+        //[DefaultValue("")]
         public string Phone {
             get;
             set;

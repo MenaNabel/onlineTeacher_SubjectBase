@@ -15,5 +15,6 @@ namespace OnlineTeacher.Services.Students.Helper
         Task<StudentViewModel> GetAsync();
         Task<StudentViewModel> GetAsyncWithoutValidate(string UserID);
         Task<IEnumerable<StudentViewModelWithoutImage>> filter(Expression<Func<Student, bool>> filter);
+        Task<bool> StudentUpdatePhoneNumber();
     }
 }

@@ -76,10 +76,13 @@ namespace OnlineTeacher.Controllers.Admin
             return BadRequest(ModelState);
         }
 
-        //// DELETE api/<StudentsController>/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //}
+        [AllowAnonymous]
+        [HttpDelete("updatePhoneNumberTest")]
+        public async Task<IActionResult> FixPhoneNumber()
+        {
+            if (await _Student.StudentUpdatePhoneNumber())
+                return Ok("تم التعديل");
+            return BadRequest("حدث خطأ");
+        }
     }
 }

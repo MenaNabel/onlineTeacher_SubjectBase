@@ -210,6 +210,38 @@ namespace OnlineTeacher.Services.Students
             UploadPhoto(student, studentviewModel);
             return await _User.Update(user);
         }
+
+        public async Task<bool> StudentUpdatePhoneNumber()
+        {
+            try
+            {
+                //var x = from stud in _context.Student
+                //        where stud.Phone == null
+                //        select stud ;
+
+                //foreach (var item in x)
+                //{
+                //    item.Phone = "لا يوجد بيانات";
+                //}
+
+              var students = await  _Students.GetListAsync(st => st.Phone == null);
+                foreach (var item in students.Items)
+                {
+                    item.Phone = "لا يوجد بيانات"; 
+                    _Students.Update(item);
+                   
+                }
+                return _Students.Commit();
+                 
+
+                 
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         #endregion
         #region Validation 
         private bool UserRequestingValiedTodealWithEntityValidation(string UserID)

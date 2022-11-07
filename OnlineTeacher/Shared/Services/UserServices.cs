@@ -105,6 +105,8 @@ namespace OnlineTeacher.Shared.Services
 
             return _NetworkHandeler.GetVisitorIp(context);
         }
+        #endregion
+
         //public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
         //{
         //    var user = await GetUser(model.Email);
@@ -161,12 +163,14 @@ namespace OnlineTeacher.Shared.Services
 
             if (Result.Succeeded)
             {
+                #region Send Confirm Email
                 //var ConfigirationEmailToken = await _userManger.GenerateEmailConfirmationTokenAsync(IdentityUser);
                 //var UserEncodingToken = Encoding.UTF8.GetBytes(ConfigirationEmailToken);
                 //var validateEmailToken = WebEncoders.Base64UrlEncode(UserEncodingToken);
 
                 //var Url = $"{_config["AppUrl"]}/api/auth/confirmEmail?userID={IdentityUser.Id}&token={validateEmailToken}";
-                //await _emailSender.SendEmailAsync(model.Email, "Active Email", EmailForm.Draw("Active Email", "Active Email", Url));
+                //await _emailSender.SendEmailAsync(model.Email, "Active Email", EmailForm.Draw("Active Email", "Active Email", Url)); 
+                #endregion
 
 
                 if (!await AssignToRoleStudent(IdentityUser))
@@ -182,7 +186,7 @@ namespace OnlineTeacher.Shared.Services
 
                 return new UserMangerResonse("user is  created successfuly", true);
 
-
+                
             }
 
             return new UserMangerResonse
@@ -346,6 +350,7 @@ namespace OnlineTeacher.Shared.Services
             return response;
 
         }
+        [Authorize]
         public async Task<UserMangerResonse> ForgetPasswordAsync(string email)
         {
 
@@ -364,7 +369,7 @@ namespace OnlineTeacher.Shared.Services
 
         }
 
-
+        [Authorize]
         public async Task<UserMangerResonse> ResetPasswordAsync(ResetPasswordViewModel model)
         {
             var user = await _userManger.FindByEmailAsync(model.Email);
@@ -401,7 +406,7 @@ namespace OnlineTeacher.Shared.Services
                 Errors = result.Errors.Select(e => e.Description),
             };
         }
-
+        [Authorize]
         public async Task<UserMangerResonse> changePasswordAsync(ChangePasswordViewModel model) {
             var user = await _userManger.FindByIdAsync(model.ID);
             if (user is null)
@@ -524,8 +529,6 @@ namespace OnlineTeacher.Shared.Services
         {
             _Student = _services.GetRequiredService<IStudentAsync>();
             var student = new ViewModels.Students.AddedStudentViewModel(model.Name, model.PhoneNumber, UserID, model.LevelID, model.Email);
-
-
 
             var AddedStudnet = await _Student.Add(student);
             return AddedStudnet is not null ? true : false;
