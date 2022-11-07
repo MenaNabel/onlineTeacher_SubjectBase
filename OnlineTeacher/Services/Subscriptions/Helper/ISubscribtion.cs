@@ -23,7 +23,7 @@ namespace OnlineTeacher.Services.Subscriptions.Helper
         Task<SubscrptionResponseManger> Active(IEnumerable<UpdateSubscribtionViewModel> subscribtionViewModel);
         Task<SubscrptionResponseManger> Remove(AddSubscibtionViewModel subscribtionViewModel);
         Task<SubscrptionResponseManger> Remove(IEnumerable<AddSubscibtionViewModel> subscribtionViewModel);
-        Task<IEnumerable<SubscriptionViewModel>> filter(Expression<Func<Student, bool>> FilterCondition);
+        IPaginate<SubscriptionViewModel> filter(Expression<Func<Student, bool>> FilterCondition, int index = 0, int size = 20);
 
 
     }

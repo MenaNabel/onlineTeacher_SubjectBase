@@ -49,9 +49,9 @@ namespace OnlineTeacher.Controllers.Admin
 
         [HttpGet("Search")]
         [Authorize(Roles.Admin)]
-        public async Task<IActionResult> Search([FromQuery]string ExamName)
+        public async Task<IActionResult> Search([FromQuery]string ExamName , int index =0 , int size = 10)
         {
-            var Exam = await _Exams.Filter(ex => ex.Name.Contains(ExamName));
+            var Exam = await _Exams.Filter(ex => ex.Name.Contains(ExamName) , index, size);
             return Ok(Exam);
         }
 

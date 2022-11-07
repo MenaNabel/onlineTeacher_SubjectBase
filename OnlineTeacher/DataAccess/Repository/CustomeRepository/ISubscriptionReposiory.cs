@@ -24,6 +24,6 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
         Task InsertAsync(Subscription[] subscriptions);
         IOrderedQueryable<SubscribitionDetails> GetAllSubscrbtionsNotConfirmed();
         Task<bool> Commit();
-        Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(Expression<Func<Student, bool>> FilterCondition);
+        IPaginate<SubscribitionDetails> GetSubscrbtionsForStudnet(Expression<Func<Student, bool>> FilterCondition, int index, int size);
     }
 }

@@ -170,16 +170,16 @@ namespace OnlineTeacher.Services.Students
                 return null;
             }
         }
-        public async Task<IEnumerable<StudentViewModelWithoutImage>> filter(Expression<Func<Student, bool>> filter)
+        public async Task<IPaginate<StudentViewModelWithoutImage>> filter(Expression<Func<Student, bool>> filter , int index =0 , int size = 10) 
         {
-            return await Get(filter); 
+            return await Get(filter , index , size); 
         }
-        private async Task<IEnumerable<StudentViewModelWithoutImage>> Get(Expression<Func<Student , bool>> filter)
+        private async Task<IPaginate<StudentViewModelWithoutImage>> Get(Expression<Func<Student, bool>> filter, int index = 0, int size = 10)
         {
             try
             {
-                var Students = await _Students.GetListAsync(st => new StudentViewModelWithoutImage { ID = st.ID , LevelID = st.LevelID , Name = st.Name ,Phone = st.Phone , City = st.City , Email = st.Email} , filter, include: St => St.Include(s => s.Level));
-                return Students.Items ;
+                var Students = await _Students.GetListAsync(st => new StudentViewModelWithoutImage { ID = st.ID , LevelID = st.LevelID , Name = st.Name ,Phone = st.Phone , City = st.City , Email = st.Email} , filter, include: St => St.Include(s => s.Level) , index:index , size:size);
+                return Students ;
             }
             catch (Exception ex)
             {

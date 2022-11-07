@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
+using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Subjects.Helper
 {
@@ -20,6 +21,6 @@ namespace OnlineTeacher.Services.Subjects.Helper
 
 
         Task<bool> Delete(int ID);
-        Task<IEnumerable<SubjectViewModel>> Filter(Expression<Func<Subject, bool>> FilterCondition);
+        Task<IPaginate<SubjectViewModel>> Filter(Expression<Func<Subject, bool>> FilterCondition, int index = 0, int size = 10);
     }
 }

@@ -133,9 +133,9 @@ namespace OnlineTeacher.Controllers
 
         [HttpGet("filter")]
         [AllowAnonymous]
-        public async Task<IActionResult> filter(string Name = "") 
+        public async Task<IActionResult> filter(string Name = "" ,int index =0 , int size = 10) 
         {
-            return Ok(await _lectures.filter(lec => lec.Name.Contains(Name)));
+            return Ok(await _lectures.filter(lec => lec.Name.Contains(Name) , index , size) );
         }
     }
 }

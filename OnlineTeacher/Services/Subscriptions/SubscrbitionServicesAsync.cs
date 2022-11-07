@@ -108,10 +108,10 @@ namespace OnlineTeacher.Services.Subscriptions
             return Subscribtion.Select(ConvertToSubscribitionViewModel);
         }
 
-        public async Task<IEnumerable<SubscriptionViewModel>> filter(Expression<Func<Student, bool>> FilterCondition)
+        public  IPaginate<SubscriptionViewModel> filter(Expression<Func<Student, bool>> FilterCondition , int index =0, int size = 20)
         {
-            var Subscribtion = await _Subscribtions.GetSubscrbtionsForStudnet(FilterCondition);
-            return Subscribtion.Select(ConvertToSubscribitionViewModel);
+            var Subscribtion =  _Subscribtions.GetSubscrbtionsForStudnet(FilterCondition , index , size);
+            return new Paginate<SubscribitionDetails, SubscriptionViewModel>(Subscribtion, s => s.Select(su => ConvertToSubscribitionViewModel(su)));
         }
 
         public IEnumerable<SubscriptionViewModel> GetSubscrbtionsNotAccepeted()

@@ -124,16 +124,16 @@ namespace OnlineTeacher.Controllers.Admin
         }
         [HttpGet("Search/{Level}")]
       
-        public async Task<IActionResult> Search(int Level)
+        public async Task<IActionResult> Search(int Level, int index =0 , int size = 10)
         {
-            return Ok(await _subjects.Filter(subj => subj.LevelID == Level));
+            return Ok(await _subjects.Filter(subj => subj.LevelID == Level , index , size));
 
         }
         [HttpGet("Search")]
        [Authorize]
-        public async Task<IActionResult> Search([FromQuery]string SubjectName)
+        public async Task<IActionResult> Search([FromQuery]string SubjectName, int index = 0, int size = 10)
         {
-            return Ok(await _subjects.Filter(subj => subj.Name.Contains(SubjectName)));
+            return Ok(await _subjects.Filter(subj => subj.Name.Contains(SubjectName) , index , size));
 
         }
 

@@ -211,10 +211,10 @@ namespace OnlineTeacher.Services.Exams
             return await _Exams.SingleOrDefaultAsync(Exam => Exam.ID == ID, include: include);
         }
 
-        public async Task<IEnumerable<ExamViewModelWithLecture>> Filter(Expression<Func<Exam, bool>> FilterCondition)
+        public async Task<IPaginate<ExamViewModelWithLecture>> Filter(Expression<Func<Exam, bool>> FilterCondition , int index = 0,int size = 10)
         {
-            var Exams = await _Exams.GetListAsync(FilterCondition, include: Ex => Ex.Include(e => e.Lecture));
-            return Exams.Items.Select(ConvertToExamViewModelWithLecture);
+            var Exams = await _Exams.GetListAsync(FilterCondition, include: Ex => Ex.Include(e => e.Lecture) , index:index ,size:size);
+            return new Paginate<Exam, ExamViewModelWithLecture>(Exams, l => l.Select(le => ConvertToExamViewModelWithLecture(le)));
 
         }
         public async Task<IEnumerable<LectureExamStudentDetailViewModel>> GetExamsForStudents()
