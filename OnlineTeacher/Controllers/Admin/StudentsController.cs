@@ -51,11 +51,11 @@ namespace OnlineTeacher.Controllers.Admin
         [HttpGet("filter")]
         // [Authorize(Roles = Roles.Admin)]
         [AllowAnonymous]
-        public async Task<IActionResult> filter(string studentName = "" , string phone = "")
+        public async Task<IActionResult> filter(string studentName = "" , string phone = "" , int index =0 , int size =10 )
         {
             try
             {
-                return Ok(await _Student.filter(st => st.Name.Contains(studentName) && st.Phone.Contains(phone)));
+                return Ok(await _Student.filter(st => st.Name.Contains(studentName) && st.Phone.Contains(phone) , index,size));
             }
             catch
             {
@@ -76,10 +76,13 @@ namespace OnlineTeacher.Controllers.Admin
             return BadRequest(ModelState);
         }
 
-        //// DELETE api/<StudentsController>/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //}
+        [AllowAnonymous]
+        [HttpDelete("updatePhoneNumberTest")]
+        public async Task<IActionResult> FixPhoneNumber()
+        {
+            if (await _Student.StudentUpdatePhoneNumber())
+                return Ok("تم التعديل");
+            return BadRequest("حدث خطأ");
+        }
     }
 }

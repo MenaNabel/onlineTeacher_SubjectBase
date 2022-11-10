@@ -31,11 +31,11 @@ namespace OnlineTeacher.Shared.Services
             }
 
         };
-       // private readonly IWebHostEnvironment _AppEnvironment;
+        private readonly IWebHostEnvironment _AppEnvironment;
 
-        public FileImage()//IWebHostEnvironment AppEnvironment)
+        public FileImage(IWebHostEnvironment AppEnvironment)
         {
-          //  _AppEnvironment = AppEnvironment;
+           _AppEnvironment = AppEnvironment;
         }
 
         private static string ConvertPhotoToBase64InString(byte[] arrayImage , string extention)
@@ -51,55 +51,56 @@ namespace OnlineTeacher.Shared.Services
         public bool UploadPhoto(IFileImage FileOrImage, out string FileOrImagePath)
         {
 
-            if (FileOrImage?.ImageOrFile?.FileName != null)
-            {
-                var extention = Path.GetExtension(FileOrImage.ImageOrFile.FileName).ToUpper();
-                if (AcceptedExtentions[Format.photo].Contains(extention))
-                {
+            //if (FileOrImage?.ImageOrFile?.FileName != null)
+            //{
+            //    var extention = Path.GetExtension(FileOrImage.ImageOrFile.FileName).ToUpper();
+            //    if (AcecptedExtentions[Format.photo].Contains(extention))
+            //    {
 
-                    Stream PhotoStream = FileOrImage.ImageOrFile.OpenReadStream();
-                    BinaryReader binaryReader = new BinaryReader(PhotoStream);
-                    var BinaryPhoto = binaryReader.ReadBytes((Int32)PhotoStream.Length);
-                    FileOrImagePath = ConvertPhotoToBase64InString(BinaryPhoto, extention);
-                    return true;
-                }
-            }
-            FileOrImagePath = default;
-            return false;
+            //        Stream PhotoStream = FileOrImage.ImageOrFile.OpenReadStream();
+            //        BinaryReader binaryReader = new BinaryReader(PhotoStream);
+            //        var BinaryPhoto = binaryReader.ReadBytes((Int32)PhotoStream.Length);
+            //        FileOrImagePath = ConvertPhotoToBase64InString(BinaryPhoto, extention);
+            //        return true;
+            //    }
+            //}
+            //FileOrImagePath = default;
+            //return false;
 
 
 
             //string uniqueFileName = null;
 
-            //try
-            //{
-            //    if (FileOrImage.Image != null && FileOrImage.Image.Length > 0)
-            //    {
-            //        var fileExt = Path.GetExtension(FileOrImage.Image.FileName);
-            //        if (fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".jpg"))
-            //        {
-            //            string fileName = Path.GetFileName(FileOrImage.Image.FileName);
-            //            string ServerPath = Path.Combine(_AppEnvironment.WebRootPath + "Uploades");
+            try
+            {
+                if(FileOrImage.ImageOrFile != null && FileOrImage.ImageOrFile.Length > 0)
+                {
+                    var FileText = Path.GetExtension(FileOrImage.ImageOrFile.FileName);
+                   // if(FileText.ToLower().EndsWith(".PNG") || FileText.ToLower().EndsWith(".JPG"))
+                   if(AcceptedExtentions[Format.photo].Contains(FileText.ToUpper()))
+                    {
+                        string FileName   = Path.GetFileName(FileOrImage.ImageOrFile.FileName);
+                        string ServerPath = Path.Combine(_AppEnvironment.WebRootPath + "/UPLOADES");
 
-            //            uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
-            //            string imgPath = Path.Combine(ServerPath, uniqueFileName);
-            //            FileOrImagePath = "/Uploades/" + uniqueFileName;
-            //            if (!Directory.Exists(ServerPath))
-            //            {
-            //                Directory.CreateDirectory(ServerPath);
-            //            }
-            //            var fileStream = new FileStream(imgPath, FileMode.Create);
-            //            FileOrImage.Image.CopyTo(fileStream);
-            //            return true;
-            //        }
-            //    }
-            //    FileOrImagePath = default;
-            //    return false;
-            //}
-            //catch (Exception e)
-            //{
-            //    throw e;
-            //}
+                        string UniqueFileName = Guid.NewGuid().ToString() + "_" + FileName;
+                        string ImagePath = Path.Combine(ServerPath, UniqueFileName);
+                        FileOrImagePath = "/UPLOADES/" + UniqueFileName;
+                        if(!Directory.Exists(ServerPath))
+                        {
+                            Directory.CreateDirectory(ServerPath);
+                        }
+                        var FileStream = new FileStream(ImagePath, FileMode.Create);
+                        FileOrImage.ImageOrFile.CopyTo(FileStream);
+                        return true;
+                    }
+                }
+                FileOrImagePath = default;
+                return false;
+            }
+            catch(Exception E)
+            {
+                throw E;
+            }
 
         }
     

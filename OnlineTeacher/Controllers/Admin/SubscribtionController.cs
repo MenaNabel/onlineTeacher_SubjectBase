@@ -81,11 +81,11 @@ namespace OnlineTeacher.Controllers.Admin
         [HttpGet("Filter")]
         [Authorize(Roles.Admin)]
        
-        public async Task<IActionResult> Filter(string studentName ="" , string phone ="")
+        public  IActionResult Filter(string studentName ="" , string phone ="", int index =0 , int size =10)
         {
             try
             {
-                return Ok(await _Subscribtion.filter(st=>st.Name.Contains(studentName) && st.Phone.Contains(phone)));
+                return Ok( _Subscribtion.filter(st=>st.Name.Contains(studentName) && st.Phone.Contains(phone),index , size));
             }
             catch (UnauthorizedAccessException ex)
             {

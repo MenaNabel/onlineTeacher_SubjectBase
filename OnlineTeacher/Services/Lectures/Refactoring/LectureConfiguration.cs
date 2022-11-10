@@ -35,7 +35,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         Task<bool> ReOpenWatchingRequest(ReOpenLectureViewModel reOpenLecture);
         Task<IPaginate<ReOpenLectureDetailsViewModel>> GetReOpenLectureRequest(int index=0, int size=20);
         Task<bool> ConfirmReOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture);
-        Task<IEnumerable<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter);
+        Task<IPaginate<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter, int index = 0, int size = 10);
 
 
     }
@@ -223,10 +223,10 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             return DetectType(lecture, type , watching.WatchingCount);
 
         }
-        public async Task<IEnumerable<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter) 
+        public async Task<IPaginate<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter , int index =0 ,int size = 10) 
         {
-        var Lectures = await  _Lectures.GetListAsync(filter);
-            return Lectures.Items.Select(ConvertToLectureViewModel);
+        var Lectures = await  _Lectures.GetListAsync(filter , index:index , size:size);
+            return new Paginate<Lecture, LectureViewModel>(Lectures, l => l.Select(le => ConvertToLectureViewModel(le)));
 
         }
         private LectureViewModel DetectType(Lecture lecture, LectureType type, int watchingCount = 0)
@@ -252,7 +252,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
 
             //var Lectures=   lectures.Items.Select(l => DetectType(l,type));
 
-            return new Paginate<Lecture, LectureViewModel>(lectures, l => l.Select(le => DetectType(le, type))); ;
+            return new Paginate<Lecture, LectureViewModel>(lectures, l => l.Select(le => DetectType(le, type))); 
         }
         //public async IEnumerable<LectureViewModel> GetAll()
         //{

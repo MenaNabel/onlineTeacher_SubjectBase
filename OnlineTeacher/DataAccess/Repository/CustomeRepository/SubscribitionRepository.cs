@@ -156,7 +156,7 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
 
             return await JoinedResult;
         }
-        public async Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(Expression<Func<Student, bool>> FilterCondition)
+        public  IPaginate<SubscribitionDetails> GetSubscrbtionsForStudnet(Expression<Func<Student, bool>> FilterCondition ,int index , int size)
         {
             
 
@@ -178,9 +178,9 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
                                  LevelID = Subject.LevelID,
                                  Phone = StudentSubscribtion.Student.Phone,
                                  Date = StudentSubscribtion.Subscribe.DataAndTime
-                             }).OrderByDescending(SubDetailes => SubDetailes.Date).ToListAsync();
+                             }).OrderByDescending(SubDetailes => SubDetailes.Date).ToPaginate(index, size);
 
-            return await JoinedResult;
+            return  JoinedResult;
         }
 
         public async Task InsertAsync(IEnumerable<Subscription> subscriptions)
