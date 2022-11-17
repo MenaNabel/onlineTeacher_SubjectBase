@@ -19,7 +19,7 @@ namespace OnlineTeacher.Services.Subjects.Helper
 
         Task<SubjectViewModel> GetAsync(int ID);
 
-
+        Task<IEnumerable<SubjectViewModel>> GetAll();
         Task<bool> Delete(int ID);
         Task<IPaginate<SubjectViewModel>> Filter(Expression<Func<Subject, bool>> FilterCondition, int index = 0, int size = 10);
     }

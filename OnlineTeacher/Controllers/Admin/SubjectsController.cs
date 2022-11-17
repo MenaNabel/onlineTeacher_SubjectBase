@@ -38,13 +38,20 @@ namespace OnlineTeacher.Controllers.Admin
         {
             return Ok(await _subjects.GetAll(index, size));
         }
+        [HttpGet("/all")]
+       // [Authorize(Roles = Roles.Admin)]
+        [AllowAnonymous]
+        public async Task<IActionResult> Get()
+        {
+            return Ok(await _subjects.GetAll());
+        }
 
         [HttpGet("DownloadInfo")]
          [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DownloadSubject()
         {
             string reportname = $"Subjects_{Guid.NewGuid():N}.xlsx";
-            var Subjects = await _subjects.GetAll();
+            var Subjects = await _subjects.GetAll(0,10000);
             
             if (Subjects.Items.ToList().Count > 0)
             {
