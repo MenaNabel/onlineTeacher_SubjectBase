@@ -128,6 +128,11 @@ namespace OnlineTeacher.Services.Subjects
             return new Paginate<Subject, SubjectViewModel>(Subjects, s => s.Select(su => ConvertType_Subject(su)));
 
         }
+        public async Task<IEnumerable<SubjectViewModel>> GetAll()
+        {
+            var subjects = await _Subjects.GetListAsync<SubjectViewModel>(selector: sub => new SubjectViewModel { ID = sub.ID, Name = sub.Name });
+            return subjects.Items;
+        }
 
 
 
