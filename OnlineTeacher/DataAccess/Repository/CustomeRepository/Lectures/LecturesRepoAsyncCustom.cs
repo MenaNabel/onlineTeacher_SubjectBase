@@ -52,8 +52,8 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
                     LectureLink = l.LectureLink,
                     Month = l.Month,
                     Name = l.Name,
-                    previousLecture = l.previousLecture,
-                    Subject = l.Subject,
+                    //previousLecture = l.previousLecture,
+                    //Subject = l.Subject,
                     SubjectID = l.SubjectID,
                     Type = l.Type
                 }

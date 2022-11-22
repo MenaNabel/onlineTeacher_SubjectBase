@@ -65,7 +65,7 @@ namespace OnlineTeacher
         
             // config the identity user schema and connect to it 
             services.AddDbContext<OnlineExamContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("ServerConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("EdaraServer")));
 
             // config the  identity user and Role
             services.AddIdentity<ApplicationUser, IdentityRole>(option =>
