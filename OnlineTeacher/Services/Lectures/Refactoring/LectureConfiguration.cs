@@ -248,7 +248,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         {
             
 
-            var lectures =  _Lectures.GetLecturesWithoutFiles(lec => lec.Type == type.ToString(), include: Lec => Lec.Include(le => le.Subject).Include(le=>le.previousLecture) , index:index , size:Size);
+            var lectures =  _Lectures.GetLecturesWithoutFiles(lec => lec.Type == type.ToString(), index:index , size:Size);
 
             //var Lectures=   lectures.Items.Select(l => DetectType(l,type));
 
