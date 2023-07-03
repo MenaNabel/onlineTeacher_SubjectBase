@@ -1,0 +1,81 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\03cd035e-e3cc-4f63-b86f-98939a525eb8_profile.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\03cd035e-e3cc-4f63-b86f-98939a525eb8_profile.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\22dbb042-ae2f-43c6-a157-d52c12efe859_profile.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\22dbb042-ae2f-43c6-a157-d52c12efe859_profile.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\250955bc-a568-47aa-8854-e5a21852c797_profile.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\250955bc-a568-47aa-8854-e5a21852c797_profile.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\60be65e4-ce1a-428c-92ab-a66759105984_wdwd.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\60be65e4-ce1a-428c-92ab-a66759105984_wdwd.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\73d1bdd0-504e-4795-bb09-e8a4d3ce6b5d_profile.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\73d1bdd0-504e-4795-bb09-e8a4d3ce6b5d_profile.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\856d8869-4256-4cd1-97dc-8224b87b050e_wdwd.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\856d8869-4256-4cd1-97dc-8224b87b050e_wdwd.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\96f8a0c3-c590-4021-a541-545e8236e060_profile.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\96f8a0c3-c590-4021-a541-545e8236e060_profile.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\bff52fc2-973e-4b2c-a32f-8cc3f18dfd5a_wdwd.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\bff52fc2-973e-4b2c-a32f-8cc3f18dfd5a_wdwd.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\db4a82e7-2832-4c58-9da9-5bb6fdf8242b_profile.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\db4a82e7-2832-4c58-9da9-5bb6fdf8242b_profile.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\eabf9ca0-2b8b-4083-bcd4-3f7ef69e3ffa_Screenshot (32).png",
+      "PackagePath": "staticwebassets\\UPLOADES\\eabf9ca0-2b8b-4083-bcd4-3f7ef69e3ffa_Screenshot (32).png"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\f4be857c-a311-496f-be4c-e960a985c5a0_wdwd.jpg",
+      "PackagePath": "staticwebassets\\UPLOADES\\f4be857c-a311-496f-be4c-e960a985c5a0_wdwd.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\UPLOADES\\f86d10db-7531-4e21-80e8-6981ff078c37_99999.PNG",
+      "PackagePath": "staticwebassets\\UPLOADES\\f86d10db-7531-4e21-80e8-6981ff078c37_99999.PNG"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\Updates.jpg",
+      "PackagePath": "staticwebassets\\Updates.jpg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\WhatsApp Image 2021-04-12 at 7.43.31 PM.jpeg",
+      "PackagePath": "staticwebassets\\WhatsApp Image 2021-04-12 at 7.43.31 PM.jpeg"
+    },
+    {
+      "Id": "D:\\Goals\\Work\\Peter_Better\\OnlineTeacherFirstRelease_Done\\OnlineTeacher\\wwwroot\\profile.jpg",
+      "PackagePath": "staticwebassets\\profile.jpg"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.OnlineTeacher.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.build.OnlineTeacher.props",
+      "PackagePath": "build\\OnlineTeacher.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.OnlineTeacher.props",
+      "PackagePath": "buildMultiTargeting\\OnlineTeacher.props"
+    },
+    {
+      "Id": "obj\\Release\\net6.0\\staticwebassets\\msbuild.buildTransitive.OnlineTeacher.props",
+      "PackagePath": "buildTransitive\\OnlineTeacher.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
