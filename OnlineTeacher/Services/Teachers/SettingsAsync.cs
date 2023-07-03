@@ -20,12 +20,15 @@ namespace OnlineTeacher.Services.Teachers
         private readonly IMapper _Mapper;
        private readonly IUserServices _user;
        private readonly IDeleteRepository<Teacher> _deleteTeacher;
-        public SettingsAsync(IRepositoryAsync<Teacher> Teachers , IMapper mapper, IUserServices user, IDeleteRepository<Teacher> deleteTeacher)
+       private readonly IFileImageUploading _uploader;
+
+        public SettingsAsync(IRepositoryAsync<Teacher> Teachers , IMapper mapper, IUserServices user, IDeleteRepository<Teacher> deleteTeacher, IFileImageUploading uploader)
         {
             _Teachers = Teachers;
            _Mapper = mapper;
             _user = user;
             _deleteTeacher = deleteTeacher;
+            _uploader = uploader; 
         }
          public  async Task<AddedSettingViewModel> Add(AddedSettingViewModel settingViewModel)
         {
@@ -34,18 +37,22 @@ namespace OnlineTeacher.Services.Teachers
             // can add one teacher in this virsion 
             if (teacherCount > 0) throw new Exception("You system have  premission to one teacher only if you need upgrades please contact with administrator , Thank you ");
             Teacher teacher = new Teacher();
+            string filepath = "";
+            bool IsuUploaded = false;
             if (settingViewModel.FormFile.Length > 0
                 /*&& _validExtensions.Contains(settingViewModel.FormFile.FileName.Substring(settingViewModel.FormFile.FileName.Length - 3,3))*/)
             {
-                using (var stream = new MemoryStream())
-                {
-                    await settingViewModel.FormFile.CopyToAsync(stream);
-                    teacher.PersonalImage = stream.ToArray();
-                }
+                //using (var stream = new MemoryStream())
+                //{
+                //    await settingViewModel.FormFile.CopyToAsync(stream);
+                //    teacher.PersonalImage = stream.ToArray();
+                //}
+                
+                IsuUploaded =  _uploader.UploadPhoto(settingViewModel.FormFile,out filepath);
             }
             teacher = _Mapper.Map<Teacher>(settingViewModel);
             teacher.UserID = await _user.CreateAdminAdndAssignToRole();
-
+            teacher.File = IsuUploaded == true ? filepath : ""; 
             // add teacher setting in system
             var TeacherAdded = await _Teachers.InsertAsync(teacher);
              // check if  not added return null 
@@ -70,16 +77,16 @@ namespace OnlineTeacher.Services.Teachers
 
             //return teacher is not null ? _Mapper.Map<AddedSettingViewModel>(teacher) : null ;
             AddedSettingViewModel addedSettingViewModel = new AddedSettingViewModel();
-            string imageSrc;
-            if(teacher.PersonalImage != null)
-            {
-                var base64 = Convert.ToBase64String(teacher.PersonalImage);
-                imageSrc = string.Format("data:image/gif;base64,"+base64);
-            } else
-            {
-                imageSrc = "";
-            }
-            addedSettingViewModel.FileName = imageSrc;
+            //string imageSrc;
+            //if(teacher.PersonalImage != null)
+            //{
+            //    var base64 = Convert.ToBase64String(teacher.PersonalImage);
+            //    imageSrc = string.Format("data:image/gif;base64,"+base64);
+            //} else
+            //{
+            //    imageSrc = "";
+            //}
+            addedSettingViewModel.FileName = teacher.File;
             return _Mapper.Map(teacher, addedSettingViewModel);
         }
 

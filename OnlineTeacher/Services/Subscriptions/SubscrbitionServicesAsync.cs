@@ -99,14 +99,14 @@ namespace OnlineTeacher.Services.Subscriptions
         {
             
             
-            var Subscribtion = await  _Subscribtions.GetSubscrbtionsForStudnet(_User.GetCurrentUserID());
+            var Subscribtion = await  _Subscribtions.GetSubscrbtionsForStudnet(_User.GetStudentID());
             return  Subscribtion.Select(ConvertToSubscribitionViewModel);
         }
-        public async Task<IEnumerable<SubscriptionViewModel>> GetAllSubscrbtionForStudent(string StudentID)
-        {
-            var Subscribtion = await _Subscribtions.GetSubscrbtionsForStudnet(StudentID);
-            return Subscribtion.Select(ConvertToSubscribitionViewModel);
-        }
+        //public async Task<IEnumerable<SubscriptionViewModel>> GetAllSubscrbtionForStudent(string StudentID)
+        //{
+        //    var Subscribtion = await _Subscribtions.GetSubscrbtionsForStudnet(StudentID);
+        //    return Subscribtion.Select(ConvertToSubscribitionViewModel);
+        //}
 
         public  IPaginate<SubscriptionViewModel> filter(Expression<Func<Student, bool>> FilterCondition , int index =0, int size = 20)
         {

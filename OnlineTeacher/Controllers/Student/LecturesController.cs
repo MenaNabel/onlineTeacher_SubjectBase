@@ -18,11 +18,13 @@ namespace OnlineTeacher.Controllers.Student
     public class LecturesController : ControllerBase
     {
         private ISudentLectureService _lectureService;
+        private readonly ILectureServices _lectures;
         private ILectureServicesForStudent _lecturesServicesForStudent;
-        public LecturesController(ISudentLectureService lectureService, ILectureServicesForStudent servicesForStudent)
+        public LecturesController(ISudentLectureService lectureService, ILectureServicesForStudent servicesForStudent, ILectureServices lectures)
         {
             _lectureService = lectureService;
             _lecturesServicesForStudent = servicesForStudent;
+            _lectures = lectures;
         }
         [HttpGet("MonthsForSubject/{SubjectID}")]
         [Authorize(Roles.Student)]
@@ -49,7 +51,8 @@ namespace OnlineTeacher.Controllers.Student
         [HttpGet("{LectureID}")]
         public async Task<IActionResult> GetLecture(int LectureID)
         {
-          var lec = await _lecturesServicesForStudent.GetStudingLecture(LectureID);
+            
+            var lec = await _lecturesServicesForStudent.GetStudingLecture(LectureID);
             if (lec is null) return NotFound();
             return Ok(lec);
             

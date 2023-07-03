@@ -32,7 +32,7 @@ namespace OnlineTeacher.Controllers.Student
             var Exam = await _Exams.GetExamForCurrentStudent(id);
             return Exam is null ? NotFound("لا يوجد امتحان موافق ") : Ok(Exam);
         }
-        [HttpGet("Grades/{id}")]
+        [HttpGet("Grades/{Studentid}")]
         [Authorize(Roles.Student)]
         public async Task<IActionResult> Grades(int Studentid)
         {

@@ -13,7 +13,7 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
     {
         IPaginate<SubscribitionDetails> GetAllSubscrbtions(int index = 0, int size = 20);
         Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(int StudnetID);
-        Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(string StudnetID);
+        //Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(string StudnetID);
         bool Update(Subscription subscription);
         void Update(IEnumerable<Subscription> subscription);
         void Remove(IEnumerable<Subscription> subscription);

@@ -132,30 +132,30 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository
             
             }
         }
-        public async Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(string StudentID)
-        {
-            var JoinedResult = _dbContext.Student.Where(st => st.UserID == StudentID).
-                     Join(_dbSet,
-                             Stud => Stud.ID,
-                             Subscribe => Subscribe.StudentID,
-                             (Student, Subscribe) => new { Student = Student, Subscribe = Subscribe }).
-                     Join(_dbContext.Subjects,
-                             Subscribtion => Subscribtion.Subscribe.SubjectID,
-                             Subject => Subject.ID,
-                             (StudentSubscribtion, Subject) => new SubscribitionDetails
-                             {
-                                 StudentID = StudentSubscribtion.Student.ID,
-                                 StudentName = StudentSubscribtion.Student.Name,
-                                 SubjectName = Subject.Name,
-                                 SubjectID = Subject.ID,
-                                 IsActive = StudentSubscribtion.Subscribe.IsActive,
-                                 LevelID = Subject.LevelID,
-                                 Phone = StudentSubscribtion.Student.Phone ,
-                                 Date = StudentSubscribtion.Subscribe.DataAndTime
-                             }).OrderByDescending(SubDetailes => SubDetailes.Date).ToListAsync();
+        //public async Task<List<SubscribitionDetails>> GetSubscrbtionsForStudnet(string StudentID)
+        //{
+        //    var JoinedResult = _dbContext.Student.Where(st => st.UserID == StudentID).
+        //             Join(_dbSet,
+        //                     Stud => Stud.ID,
+        //                     Subscribe => Subscribe.StudentID,
+        //                     (Student, Subscribe) => new { Student = Student, Subscribe = Subscribe }).
+        //             Join(_dbContext.Subjects,
+        //                     Subscribtion => Subscribtion.Subscribe.SubjectID,
+        //                     Subject => Subject.ID,
+        //                     (StudentSubscribtion, Subject) => new SubscribitionDetails
+        //                     {
+        //                         StudentID = StudentSubscribtion.Student.ID,
+        //                         StudentName = StudentSubscribtion.Student.Name,
+        //                         SubjectName = Subject.Name,
+        //                         SubjectID = Subject.ID,
+        //                         IsActive = StudentSubscribtion.Subscribe.IsActive,
+        //                         LevelID = Subject.LevelID,
+        //                         Phone = StudentSubscribtion.Student.Phone ,
+        //                         Date = StudentSubscribtion.Subscribe.DataAndTime
+        //                     }).OrderByDescending(SubDetailes => SubDetailes.Date).ToListAsync();
 
-            return await JoinedResult;
-        }
+        //    return await JoinedResult;
+        //}
         public  IPaginate<SubscribitionDetails> GetSubscrbtionsForStudnet(Expression<Func<Student, bool>> FilterCondition ,int index , int size)
         {
             

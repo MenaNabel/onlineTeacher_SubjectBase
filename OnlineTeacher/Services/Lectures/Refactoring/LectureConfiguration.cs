@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using OnlineTeacher.DataAccess;
 using OnlineTeacher.DataAccess.Context;
 using OnlineTeacher.DataAccess.Context.Bridge;
 using OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures;
@@ -27,7 +28,9 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         Task<bool> IsExsist(int ID);
         Task<LectureResponseManger> Add(AddLectureViewModel entity, LectureType type);
         Task<LectureViewModel> GetAsync(int ID, LectureType type);
-        IPaginate<LectureViewModel> GetAll(LectureType type, int index = 0, int Size = 20);
+        Task<LectureViewModel> GetAsyncByAdmin(int ID, LectureType type);
+        List<Lecture> GetSubjectLectures(int ID, LectureType type);
+        Task<IPaginate<Lecture>> GetAll(LectureType type, int index = 0, int Size = 20);
       //  Task<IEnumerable<LectureViewModel>> GetAll();
         Task<Lecture> Get(int ID);
         Task<LectureResponseManger> Update(AddLectureViewModel lec, LectureType type);
@@ -36,7 +39,7 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         Task<IPaginate<ReOpenLectureDetailsViewModel>> GetReOpenLectureRequest(int index=0, int size=20);
         Task<bool> ConfirmReOpenWatching(ReOpenLectureDetailsViewModel reOpenLecture);
         Task<IPaginate<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter, int index = 0, int size = 10);
-
+        Task<bool> GetWatching(int ID);
 
     }
     
@@ -209,6 +212,18 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                   };
             
         }
+
+        public async Task< bool> GetWatching(int ID)
+        {
+            int studentId = _user.GetStudentID();
+            var watching = await _Watcher.GetWatching(studentId, ID);
+            if (watching.WatchingCount >= 3)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<LectureViewModel> GetAsync(int ID ,LectureType type)
         {
             
@@ -221,6 +236,24 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return DetectType(lecture, type);
             }
             return DetectType(lecture, type , watching.WatchingCount);
+
+        }
+
+        public async Task<LectureViewModel> GetAsyncByAdmin(int ID, LectureType type)
+        {
+
+
+            var lecture = await _Lectures.SingleOrDefaultWithoutFile(lec => lec.ID == ID && lec.Type == type.ToString(), include: Lec => Lec.Include(le => le.Subject));
+return DetectType(lecture, type);
+
+        }
+
+        public  List<Lecture> GetSubjectLectures(int subjectId, LectureType type)
+        {
+
+
+            var lectures =  _Lectures.GetAllByAdmin(subjectId, type);
+            return lectures;
 
         }
         public async Task<IPaginate<LectureViewModel>> filter(Expression<Func<Lecture, bool>> filter , int index =0 ,int size = 10) 
@@ -244,15 +277,14 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 return  ConvertToLectureViewModel(lecture);
             }
         }
-        public  IPaginate<LectureViewModel> GetAll(LectureType type ,int index = 0 ,int Size = 20)
+        public  async Task<IPaginate<Lecture>> GetAll(LectureType type ,int index = 0 ,int Size = 20)
         {
-            
 
-            var lectures =  _Lectures.GetLecturesWithoutFiles(lec => lec.Type == type.ToString(), index:index , size:Size);
 
-            //var Lectures=   lectures.Items.Select(l => DetectType(l,type));
+            var lectures = _Lectures.GetLecturesWithoutFiles(lec => lec.Type == type.ToString(), include: Lec => Lec.Include(le => le.Subject).Include(le => le.previousLecture), index: index, size: Size);
+            //var Lectures = lectures.Items.Select(l => DetectType(l, type));
 
-            return new Paginate<Lecture, LectureViewModel>(lectures, l => l.Select(le => DetectType(le, type))); 
+            return lectures; 
         }
         //public async IEnumerable<LectureViewModel> GetAll()
         //{
@@ -323,6 +355,9 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
                 Errors = new[] { "Not Found" }
             };
 
+            lecture.previousLecture =await _Lectures.SingleOrDefaultAsync(lec => lec.ID == Int32.Parse(lectureViewModel.PreviousLecture));
+
+
             if (UploadFile(lecture, lectureViewModel))
             {
                 UpdatingStudingLectureProcess(lectureViewModel, lecture);
@@ -367,8 +402,9 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
             lecture.Month = LectureViewModel.Month;
             lecture.SubjectID = LectureViewModel.SubjectId;
             lecture.LectureID = LectureViewModel.LectureID;
-           
-        
+            //lecture.previousLecture = _Lectures.GetAllByAdmin(lecture.SubjectID, lecture.Type == "studying" ? LectureType.studying : LectureType.online)
+            //    .SingleOrDefault(lec => lec.ID == Int32.Parse(LectureViewModel.PreviousLecture));
+
         }
         public async Task<FileResponse> GetFile(int LectureID)
         {
@@ -451,13 +487,16 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         private IUserServices _user;
         private IMapper _Mapper;
         private IWatcher _Watcher;
-        public LectureServicesForStudent(ILectureRepo Lectures , IRepositoryAsync<Exam> Exam , IUserServices user,IMapper mapper , IWatcher watcher)
+        private readonly IRepository<Lecture> _ILecture;
+        public LectureServicesForStudent(ILectureRepo Lectures , 
+            IRepositoryAsync<Exam> Exam , IUserServices user,IMapper mapper , IWatcher watcher, IRepository<Lecture> ILecture)
         {
             _Lectures = Lectures;
             _Exams = Exam;
             _user = user;
             _Mapper = mapper;
             _Watcher = watcher;
+            _ILecture = ILecture;
         }
 
         public async Task<StudeingLectureViewModel> GetStudingLecture(int ID)
@@ -573,12 +612,28 @@ namespace OnlineTeacher.Services.Lectures.Refactoring
         public async Task<IEnumerable<StudeingLectureViewModel>> GetLecturesbyMonth(int subjectID, int month)
         {
             int studentID = _user.GetStudentID();
-            var Lectures = await _Lectures.GetListAsync(Le => Le.SubjectID == subjectID && Le.Month == month , include: l=>l.Include(le=>le.Subject).ThenInclude(lec=>lec.Subscriptions.Where(s=>s.StudentID == studentID)));
+            var x = _Lectures.GetAll(subjectID, month, studentID);
+            //.Where(Le => Le.SubjectID == subjectID && Le.Month == month);
+            
+            //var lectures1 = await _Lectures.GetListAsync(Le => Le.SubjectID == subjectID && Le.Month == month, null);
+            //var l = _ILecture.GetList(
+            //    Le => Le.SubjectID == subjectID && Le.Month == month,
+            //    null,
+            //    include: l => l.Include(le => le.Subject).ThenInclude(lec => lec.Subscriptions.Where(s => s.StudentID == studentID))
+                
+            //);
+            //int studentID = _user.GetStudentID();
+            //var Lectures = await _Lectures.GetListAsync(Le => Le.SubjectID == subjectID && Le.Month == month, include: l => l.Include(le => le.Subject).ThenInclude(lec => lec.Subscriptions.Where(s => s.StudentID == studentID)));
 
-          var validateLect =   Lectures.Count > 0 ? validateUserAuthorization(Lectures.Items.FirstOrDefault()) : null;
+            //var validateLect = Lectures.Count > 0 ? validateUserAuthorization(Lectures.Items.FirstOrDefault()) : null;
+            //if (validateLect is null)
+            //    return null;
+            //return Lectures.Items.Select(ConvertToStudingLectureViewModel);
+
+            var validateLect = x.Count > 0 ? validateUserAuthorization(x.FirstOrDefault()) : null;
             if (validateLect is null)
                 return null;
-            return Lectures.Items.Select(ConvertToStudingLectureViewModel);
+            return x.Select(ConvertToStudingLectureViewModel);
 
         }
 

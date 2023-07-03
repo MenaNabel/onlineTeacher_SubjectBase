@@ -24,17 +24,19 @@ namespace OnlineTeacher.Controllers
     public class StudyLecturesController : Controller
     {
         private readonly ILectureServices _lectures;
-       // private readonly IReport _IReport;
+       private readonly IReport _IReport;
         private LectureType type = LectureType.studying;
-        public StudyLecturesController(ILectureServices lectures, IReport IReport)
+        private readonly IWatcher _watcher;
+        public StudyLecturesController(ILectureServices lectures, IReport IReport, IWatcher watcher)
         {
             _lectures = lectures;
-           // _IReport = IReport;
+             _IReport = IReport;
+            _watcher = watcher;
         }
         [HttpGet]
-        public  IActionResult Get(int index =0 , int size= 20)
+        public async Task< IActionResult> Get(int index =0 , int size= 20)
         {
-            var Lectures =  _lectures.GetAll(type , index, size);
+            var Lectures = await _lectures.GetAll(type , index, size);
             return Ok(Lectures);
         }
 
@@ -65,27 +67,44 @@ namespace OnlineTeacher.Controllers
            
 
         }
-        //[HttpGet("DownloadInfo")]
-        //[Authorize(Roles = Roles.Admin)]
-        //public  async Task<IActionResult> DownloadLectures()
-        //{
-        //    string reportname = $"Lecture_{Guid.NewGuid():N}.xlsx";
-        //    var Lectures =  await _lectures.GetAll(type);
+        [HttpGet("DownloadInfo")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DownloadLectures()
+        {
+            string reportname = $"Lecture_{Guid.NewGuid():N}.xlsx";
+            var Lectures = await _lectures.GetAll(type, 0, 10000);
 
-        //    if (Lectures.ToList().Count > 0)
-        //    {
-        //        var exportbytes = _IReport.ExporttoExcel<LectureExcelFormat>(
-        //            Lectures.Select(lec => new LectureExcelFormat { Name = lec.Name, Description = lec.Description,  LectureLink = lec.LectureLink, Type = lec.Type }).ToList()
-        //            , reportname);
-        //        return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
-        //    }
-        //    return NoContent();
-        //}
+            if (Lectures.Items.ToList().Count > 0)
+            {
+                var exportbytes = _IReport.ExporttoExcel<LectureExcelFormat>(
+                    Lectures.Items.Select(lec => new LectureExcelFormat { Name = lec.Name, Description = lec.Description, LectureLink = lec.LectureLink, Type = lec.Type }).ToList()
+                    , reportname);
+                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+            }
+            return NoContent();
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("GetByAdmin/{id}")]
+        public async Task<IActionResult> GetByAdmin(int id)
+        {
+            var Lecture = await _lectures.GetAsyncByAdmin(id, type);
+            return Lecture is not null ? Ok((StudeingLectureViewModel)Lecture) : NotFound();
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("GetAllLectures/{id}")]
+        public  IActionResult GetAllLecturesByAdmin(int id)
+        {
+            var Lectures =  _lectures.GetSubjectLectures(id, type);
+            return Lectures is not null ? Ok(Lectures) : NotFound();
+        }
 
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+           
             var Lecture = await _lectures.GetAsync(id, type);
             return Lecture is not null ?Ok((StudeingLectureViewModel)Lecture) : NotFound();
         }

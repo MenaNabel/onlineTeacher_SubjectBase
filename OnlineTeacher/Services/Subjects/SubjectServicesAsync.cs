@@ -108,6 +108,14 @@ namespace OnlineTeacher.Services.Subjects
 
 
         }
+
+        public async Task<IPaginate<SubjectViewModel>> GetAllLectures(Expression<Func<Subject, bool>> FilterCondition, int index = 0, int size = 100)
+        {
+            var Subjects = await _Subjects.GetListAsync(FilterCondition, include: Sub => Sub.Include(s => s.level), index: index, size: size);
+            return new Paginate<Subject, SubjectViewModel>(Subjects, s => s.Select(su => ConvertType_Subject(su)));
+
+
+        }
         /// <summary>
         /// Used in Services Layer  Not in  Presentaion Layer
         /// </summary>

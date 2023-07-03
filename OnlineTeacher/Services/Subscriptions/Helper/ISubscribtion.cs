@@ -17,7 +17,6 @@ namespace OnlineTeacher.Services.Subscriptions.Helper
          Task<SubscrptionResponseManger> Subscribe(IEnumerable<AddSubscibtionViewModel> subscribtions);
         Task<SubscrptionResponseManger> Subscribe(AddSubscibtionViewModel subscribtionsViewModel);
         Task<IEnumerable<SubscriptionViewModel>> GetAllSubscrbtionForStudent(int StudentID);
-        Task<IEnumerable<SubscriptionViewModel>> GetAllSubscrbtionForStudent(string StudentID);
         Task<IEnumerable<SubscriptionViewModel>> GetAllSubscrbtionForCurrentStudent();
         Task<SubscrptionResponseManger> Active(UpdateSubscribtionViewModel subscribtionViewModel);
         Task<SubscrptionResponseManger> Active(IEnumerable<UpdateSubscribtionViewModel> subscribtionViewModel);

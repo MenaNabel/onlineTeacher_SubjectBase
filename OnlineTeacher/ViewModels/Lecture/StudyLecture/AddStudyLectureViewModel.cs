@@ -13,7 +13,8 @@ namespace OnlineTeacher.ViewModels.Lecture
         public int Month { get; set; }
         public bool IsAppear { get; set; }
         public bool IsFree { get; set; }
-        
+        public string PreviousLecture{ get; set; }
+
         public IFormFile ImageOrFile { get; set; }
     }
 }

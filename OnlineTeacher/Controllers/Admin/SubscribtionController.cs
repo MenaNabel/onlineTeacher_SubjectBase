@@ -34,22 +34,22 @@ namespace OnlineTeacher.Controllers.Admin
         {
             return Ok(_Subscribtion.GetAllSubscrbtion(index , size));
         }
-        //[HttpGet("DownloadInfo")]
-        //[Authorize(Roles = Roles.Admin)]
-        //public  IActionResult DownloadSubscrbtion()
-        //{
-        //    string reportname = $"Subscriptions_{Guid.NewGuid():N}.xlsx";
-        //    var Subscribtions =  _Subscribtion.GetAllSubscrbtion();
+        [HttpGet("DownloadInfo")]
+        [Authorize(Roles = Roles.Admin)]
+        public IActionResult DownloadSubscrbtion()
+        {
+            string reportname = $"Subscriptions_{Guid.NewGuid():N}.xlsx";
+            var Subscribtions = _Subscribtion.GetAllSubscrbtion(0, 10000);
 
-        //    if (Subscribtions.Items.ToList().Count > 0)
-        //    {
-        //        var exportbytes = _IReport.ExporttoExcel<SubscribtionsExcellFormat>(
-        //            Subscribtions.Items.Select(sub => new SubscribtionsExcellFormat { StudentName = sub.StudentName, SubjectName = sub.SubjectName, Date = sub.Date, IsActive = sub.IsActive, Level = sub.LevelID.ToString() }).ToList()
-        //            , reportname);
-        //        return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
-        //    }
-        //    return NoContent();
-        //}
+            if (Subscribtions.Items.ToList().Count > 0)
+            {
+                var exportbytes = _IReport.ExporttoExcel<SubscribtionsExcellFormat>(
+                    Subscribtions.Items.Select(sub => new SubscribtionsExcellFormat { StudentName = sub.StudentName, SubjectName = sub.SubjectName, Date = sub.Date, IsActive = sub.IsActive, Level = sub.LevelID.ToString() }).ToList()
+                    , reportname);
+                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+            }
+            return NoContent();
+        }
 
         [HttpGet("Not Confirmed")]
         [Authorize(Roles.Admin)]
@@ -85,7 +85,7 @@ namespace OnlineTeacher.Controllers.Admin
         {
             try
             {
-                return Ok( _Subscribtion.filter(st=>st.Name.Contains(studentName) && st.Phone.Contains(phone),index , size));
+                return Ok( _Subscribtion.filter(st=>st.Name.Contains(studentName) || st.Phone.Contains(phone),index , size));
             }
             catch (UnauthorizedAccessException ex)
             {

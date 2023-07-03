@@ -7,8 +7,8 @@ namespace OnlineTeacher.Shared.Static
 {
     public  class AdminData
     {
-        public const string Email = "Admin@Sigma.com";
-        public const string password = "Peter@Salama2000";
+        public const string Email = "Admin@learning.com";
+        public const string password = "Admin@123456";
         public const string Name = "AdminSigmaHash";
     }
 }

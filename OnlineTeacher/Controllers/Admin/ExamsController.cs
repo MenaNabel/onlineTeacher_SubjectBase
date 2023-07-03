@@ -37,7 +37,7 @@ namespace OnlineTeacher.Controllers.Admin
         //Authorize(Roles.Admin)]
         public async Task<IActionResult> GetExamsForStudents(int index = 0, int size = 20)
         {
-            return Ok(await _Exams.GetExamsForStudents());
+            return Ok(await _Exams.GetExamsForStudents(index, size));
         }
         [HttpGet("{id}")]
         [Authorize(Roles.Admin+","+ Roles.Student)]

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,9 +54,14 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
                     Month = l.Month,
                     Name = l.Name,
                     //previousLecture = l.previousLecture,
-                    //Subject = l.Subject,
+                    Subject = new Subject() { 
+                        Name = l.Subject.Name
+                        , ID = l.Subject.ID
+                        
+                        } ,
                     SubjectID = l.SubjectID,
-                    Type = l.Type
+                    Type = l.Type,
+                    File = l.File
                 }
             ).ToPaginate(index , size);
         }
@@ -116,6 +122,62 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
                     Type = l.Type
                 }
             ).FirstOrDefaultAsync();
+        }
+    
+        public List<Lecture> GetAllByAdmin(int subjectID, LectureType type)
+        {
+            var lects = _dbSet.Where(lec => lec.SubjectID == subjectID && lec.Type == type.ToString())
+                .Select(lecc => new Lecture
+                {
+                    ID = lecc.ID,
+                    Name = lecc.Name,
+                    Month = lecc.Month,
+                    DateTime = lecc.DateTime,
+                    Description = lecc.Description,
+                    FileName = lecc.FileName,
+                    IsFree = lecc.IsFree,
+                    IsAppear = lecc.IsAppear,
+                    LectureID = lecc.LectureID,
+                    LectureLink = lecc.LectureLink,
+                    Type = lecc.Type,
+                    SubjectID = lecc.SubjectID,
+                    Subject = new Subject
+                    {
+                        Name = lecc.Subject.Name,
+                        ID = lecc.Subject.ID
+                    },
+                    previousLecture = lecc.previousLecture
+                }) ;
+
+            return lects.ToList();
+        }
+
+        public List<Lecture> GetAll(int subjectID, int month, int studentID)
+        {
+            var lects = _dbSet.Where(lec => lec.SubjectID == subjectID && lec.Month == month)
+                .Select(lecc => new Lecture
+                {
+                    ID = lecc.ID,
+                    Name = lecc.Name,
+                    Month = lecc.Month,
+                    DateTime = lecc.DateTime,
+                    Description = lecc.Description,
+                    FileName = lecc.FileName,
+                    IsFree = lecc.IsFree,
+                    IsAppear = lecc.IsAppear,
+                    LectureID = lecc.LectureID,
+                    LectureLink = lecc.LectureLink,
+                    Type = lecc.Type,
+                    SubjectID = lecc.SubjectID,
+                    Subject = new Subject
+                    {
+                        Name = lecc.Subject.Name,
+                        ID = lecc.Subject.ID,
+                        Subscriptions = lecc.Subject.Subscriptions.Where(sub => sub.StudentID == studentID).ToList()
+                    }
+                });
+
+            return lects.ToList();
         }
     }
 }

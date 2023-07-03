@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.Shared.Enums;
 using OnlineTeacher.ViewModels.Lecture;
 using System;
 using System.Collections.Generic;
@@ -26,5 +27,8 @@ namespace OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures
               Func<IQueryable<Lecture>, IIncludableQueryable<Lecture, object>> include = null,
               bool enableTracking = true,
               bool ignoreQueryFilters = false);
+
+        List<Lecture> GetAll(int subjectId, int month, int studentId);
+        List<Lecture> GetAllByAdmin(int subjectId, LectureType type);
     }
 }

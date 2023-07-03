@@ -46,6 +46,7 @@ using OnlineTeacher.Services.Home;
 using OnlineTeacher.Services.Home.Helper;
 using OnlineTeacher.Services.Lectures.Refactoring;
 using OnlineTeacher.DataAccess.Repository.CustomeRepository.Lectures;
+using OnlineTeacher.DataAccess.Context;
 
 namespace OnlineTeacher
 {
@@ -65,7 +66,7 @@ namespace OnlineTeacher
         
             // config the identity user schema and connect to it 
             services.AddDbContext<OnlineExamContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("EdaraServer")));
+            options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringNames.ServerLiveConnection)));
 
             // config the  identity user and Role
             services.AddIdentity<ApplicationUser, IdentityRole>(option =>
@@ -154,6 +155,7 @@ namespace OnlineTeacher
 
 
             services.AddTransient<IReport, ReportService>();
+            services.AddTransient<IRepositoryReadOnly<Lecture>, RepositoryReadOnly<Lecture>>();
             services.AddTransient<INetwork, NetworkServices>();
             services.AddTransient<IFileImageUploading, FileImage>();
             services.AddTransient<ISudentLectureService, StudyLectureServicesAsync>();
@@ -194,8 +196,8 @@ namespace OnlineTeacher
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
             #endregion
-            
 
+            //"http://localhost:3001","http://localhost:3000", 
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
             services.AddTransient(typeof(IDeleteRepository<>), typeof(DeleteRepository<>));
@@ -209,7 +211,7 @@ namespace OnlineTeacher
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3001", "http://localhost:3000", "https://petersalamamath.com", "https://admin.petersalamamath.com")
+                        builder.WithOrigins("http://localhost:3001", "http://localhost:3000","https://petersalamamath.com", "https://admin.petersalamamath.com")
                         .AllowAnyHeader().AllowAnyMethod();
                     });
             });

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting.Internal;
 using OnlineTeacher.Shared.Interfaces;
 using System;
@@ -103,7 +104,62 @@ namespace OnlineTeacher.Shared.Services
             }
 
         }
-    
+        public bool UploadPhoto(IFormFile FileOrImage, out string FileOrImagePath)
+        {
+
+            //if (FileOrImage?.ImageOrFile?.FileName != null)
+            //{
+            //    var extention = Path.GetExtension(FileOrImage.ImageOrFile.FileName).ToUpper();
+            //    if (AcecptedExtentions[Format.photo].Contains(extention))
+            //    {
+
+            //        Stream PhotoStream = FileOrImage.ImageOrFile.OpenReadStream();
+            //        BinaryReader binaryReader = new BinaryReader(PhotoStream);
+            //        var BinaryPhoto = binaryReader.ReadBytes((Int32)PhotoStream.Length);
+            //        FileOrImagePath = ConvertPhotoToBase64InString(BinaryPhoto, extention);
+            //        return true;
+            //    }
+            //}
+            //FileOrImagePath = default;
+            //return false;
+
+
+
+            //string uniqueFileName = null;
+
+            try
+            {
+                if (FileOrImage != null && FileOrImage.Length > 0)
+                {
+                    var FileText = Path.GetExtension(FileOrImage.FileName);
+                    // if(FileText.ToLower().EndsWith(".PNG") || FileText.ToLower().EndsWith(".JPG"))
+                    if (AcceptedExtentions[Format.photo].Contains(FileText.ToUpper()))
+                    {
+                        string FileName = Path.GetFileName(FileOrImage.FileName);
+                        string ServerPath = Path.Combine(_AppEnvironment.WebRootPath + "/UPLOADES");
+
+                        string UniqueFileName = Guid.NewGuid().ToString() + "_" + FileName;
+                        string ImagePath = Path.Combine(ServerPath, UniqueFileName);
+                        FileOrImagePath = "/UPLOADES/" + UniqueFileName;
+                        if (!Directory.Exists(ServerPath))
+                        {
+                            Directory.CreateDirectory(ServerPath);
+                        }
+                        var FileStream = new FileStream(ImagePath, FileMode.Create);
+                        FileOrImage.CopyTo(FileStream);
+                        return true;
+                    }
+                }
+                FileOrImagePath = default;
+                return false;
+            }
+            catch (Exception E)
+            {
+                throw E;
+            }
+
+        }
+
         public bool UploadFile(IFileImage File, out string FileName ,out byte[] FileData )
         {
 

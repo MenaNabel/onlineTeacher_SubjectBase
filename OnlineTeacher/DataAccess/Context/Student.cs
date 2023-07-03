@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace OnlineTeacher.DataAccess.Context
 {
+    
     public class Student
     {
         [Key]
@@ -16,17 +18,16 @@ namespace OnlineTeacher.DataAccess.Context
 
        
         [Phone]
-        //[Required]
-        //[DefaultValue("")]
-        public string Phone {
-            get;
-            set;
-        }
+        public string Phone {get;set;} 
+        [Phone]
+        public string ParentPhone { get;set;}
+        [Required]
         public string City { get; set; }
         [Required]
-        public string UserID { get; set; }
+      
         public string Email { get; set; }
-        
+        [Required]
+        public  string school { get; set; }
 
         [ForeignKey(nameof(Level))]
         public int LevelID { get; set; }

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OnlineTeacher.DataAccess;
+using OnlineTeacher.DataAccess.Context;
+using OnlineTeacher.Services.Lectures.Helper;
 using OnlineTeacher.Services.Students.Helper;
 using OnlineTeacher.Shared.Interfaces;
 using OnlineTeacher.Shared.Services.Emails;
@@ -14,6 +16,7 @@ using OnlineTeacher.Shared.Static;
 using OnlineTeacher.Shared.ViewModel;
 using OnlineTeacher.ViewModels.Identity.Login;
 using OnlineTeacher.ViewModels.Identity.Regiesteration;
+using OnlineTeacher.ViewModels.Students;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -60,12 +63,9 @@ namespace OnlineTeacher.Shared.Services
             if (string.IsNullOrEmpty(St) || St == "0")
             {
 
-                _Student = _services.GetRequiredService<IStudentAsync>();
-                var student = _Student.GetAsyncWithoutValidate(GetCurrentUserID());
+                var student = _userManger.FindByIdAsync(ClaimTypes.NameIdentifier);
                 student.Wait();
-                if (student is null)
-                    return 0;
-                return student.Result.ID;
+                return student?.Result?.studentID ?? 0;
             }
             return int.Parse(St);
 
@@ -107,37 +107,7 @@ namespace OnlineTeacher.Shared.Services
         }
         #endregion
 
-        //public async Task<UserMangerResonse> ChangeIP(ChangeIpViewModel model)
-        //{
-        //    var user = await GetUser(model.Email);
-        //    if (user is null)
-        //        return new UserMangerResonse("Invalid email", false);
-
-        //    if (user.IsAssignedIp(model.OldIp))
-        //    {
-        //        if (user.DeleteIp(model.OldIp))
-        //            if (user.Assign(model.NewIp))
-        //            {
-        //                if (await Update(user))
-        //                    return new UserMangerResonse("changed successfuly", true);
-        //            }
-        //              else  return new UserMangerResonse("not updated successfuly", true);
-        //        return new UserMangerResonse("not deleted successfuly", false);
-        //    }
-        //    return new UserMangerResonse("not found ip", false);
-        //}
-        //    if (user.DeleteIp())
-
-        //        if (await Update(user))
-        //            return new UserMangerResonse("changed successfuly", true);
-
-        //        else
-        //            return new UserMangerResonse("not updated successfuly", true);
-
-        //    return new UserMangerResonse("not deleted successfuly", false);
-
-
-        //}
+        
         public async Task<UserMangerResonse> RegiesterUserAsync(RegiesterViewModel model)
         {
             // if model not have value throw exception
@@ -151,13 +121,14 @@ namespace OnlineTeacher.Shared.Services
                     IsSuccess = false,
                     Message = "تأكيد كلمة المرور مختلفة عن كلمة المرور, تأكد من إدخالهم بشكل صحيح",
                 };
-
+           
             // create new User Identity
             var IdentityUser = new ApplicationUser
             {
                 Email = model.Email,
                 UserName = model.Email + model.Name,
-                Name = model.Name// make user name is email comapct with name
+                Name = model.Name,// make user name is email comapct with name
+                 
             };
             var Result = await _userManger.CreateAsync(IdentityUser, model.Password);
 
@@ -179,9 +150,13 @@ namespace OnlineTeacher.Shared.Services
                     return new UserMangerResonse("user is  created but not assign to role and student not created", false);
                 }
 
-                if (!await CreateStudentAsync(model, IdentityUser.Id))
-                    return new UserMangerResonse("user is  created but student not", false);
+                var Student = await CreateStudentAsync(model);
 
+                if (Student == null)
+                    return new UserMangerResonse("Student is  not created ", false);
+                var user = await _userManger.FindByEmailAsync(Student.Email);
+                user.studentID = Student.ID;
+                await _userManger.UpdateAsync(user);
 
 
                 return new UserMangerResonse("user is  created successfuly", true);
@@ -216,38 +191,24 @@ namespace OnlineTeacher.Shared.Services
             //if(!user.EmailConfirmed)
             //    return new UserMangerResonse("Email Not Confirmed", false);
 
-            //#region Validation IPs
-
-
-            //NetworkViewMode NetworkInfo = GetVisitorIp();
-            //if (!user.IsAssignedIp(NetworkInfo))
-            //{
-            //    if (!user.Assign(NetworkInfo))
-            //        return new UserMangerResonse("Invalid Ip", false);
-            //    if (!await Update(user))
-            //    {
-            //        return new UserMangerResonse("have a problem please try again", false);
-            //    }
-            //}
-
-
-            //#endregion
+           
 
             // get user Role
             var Role = await GetRoleAsync(user);
-            var _Student = _services.GetRequiredService<IStudentAsync>();
-            var Student = await _Student.GetAsyncWithoutValidate(user.Id);
-
+            if (Role.Count() == 0)
+                return new UserMangerResonse("Not have Role  , Re Regist Email" , false);
+            
 
             // Get Security Key From Setting
             var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["AuthSetting:Key"]));
 
-            var AccessToken = GenerateAccessToken(user, Key, Role, Student?.ID);
+            var AccessToken = GenerateAccessToken(user, Key, Role, user.studentID);
             // convert token to String 
             var TokenAsString = new JwtSecurityTokenHandler().WriteToken(AccessToken);
             return new UserMangerResonse(TokenAsString, true, AccessToken.ValidTo);
 
         }
+       
         public async Task<UserMangerResonse> GoogleLoginUserAsync(GoogleLoginViewModel model)
         {
             if (model is null)
@@ -264,14 +225,13 @@ namespace OnlineTeacher.Shared.Services
 
             // get user Role
             var Role = await GetRoleAsync(user);
-            var _Student = _services.GetRequiredService<IStudentAsync>();
-            var Student = await _Student.GetAsyncWithoutValidate(user.Id);
+            
 
 
             // Get Security Key From Setting
             var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["AuthSetting:Key"]));
 
-            var AccessToken = GenerateAccessToken(user, Key, Role, Student?.ID);
+            var AccessToken = GenerateAccessToken(user, Key, Role, user.studentID);
             // convert token to String 
             var TokenAsString = new JwtSecurityTokenHandler().WriteToken(AccessToken);
             return new UserMangerResonse(TokenAsString, true, AccessToken.ValidTo);
@@ -283,14 +243,21 @@ namespace OnlineTeacher.Shared.Services
             // if model not have value throw exception
             if (model is null)
                 throw new NullReferenceException("Regiester model is null");
+            _Student = _services.GetRequiredService<IStudentAsync>();
+            var student = new ViewModels.Students.AddedStudentViewModel(model.Name,null, null,0,  1, model.Email ,"لا يوجد محافظه");
+            var Student = await _Student.Add(student);
+
+            if (Student is  null)
+                return new UserMangerResonse("user is  not created ", false);
 
             // create new User Identity
             var IdentityUser = new ApplicationUser
             {
                 Email = model.Email,
                 UserName = model.Email,
-                Name = model.Name// make user name is email comapct with name
-            };
+                Name = model.Name,// make user name is email comapct with name
+                studentID = Student.ID
+        };
             var Result = await _userManger.CreateAsync(IdentityUser);
 
             if (Result.Succeeded)
@@ -309,15 +276,8 @@ namespace OnlineTeacher.Shared.Services
                     return new UserMangerResonse("user is  created but not assign to role and student not created", false);
                 }
 
-                _Student = _services.GetRequiredService<IStudentAsync>();
-                var student = new ViewModels.Students.AddedStudentViewModel(model.Name, null, IdentityUser.Id, 1, model.Email);
+               
 
-
-
-                var AddedStudnet = await _Student.Add(student);
-
-                if (!(AddedStudnet is not null))
-                    return new UserMangerResonse("user is  created but student not", false);
 
 
 
@@ -525,13 +485,13 @@ namespace OnlineTeacher.Shared.Services
             var identiityRole = await _userManger.AddToRoleAsync(user, Roles.Student);
             return identiityRole.Succeeded;
         }
-        private async Task<bool> CreateStudentAsync(RegiesterViewModel model, string UserID)
+        private async Task<AddedStudentViewModel> CreateStudentAsync(RegiesterViewModel model)
         {
             _Student = _services.GetRequiredService<IStudentAsync>();
-            var student = new ViewModels.Students.AddedStudentViewModel(model.Name, model.PhoneNumber, UserID, model.LevelID, model.Email);
+            var student = new ViewModels.Students.AddedStudentViewModel(model.Name, model.PhoneNumber, model.ParentPhone, 0,model.LevelID, model.Email,model.city , model.SchoolName);
 
             var AddedStudnet = await _Student.Add(student);
-            return AddedStudnet is not null ? true : false;
+            return AddedStudnet;
 
         }
 
@@ -541,9 +501,7 @@ namespace OnlineTeacher.Shared.Services
 
             userUpdated.Name = user.Name;
             userUpdated.PhoneNumber = user.PhoneNumber;
-            userUpdated.VisitorIP = user.VisitorIP;
-            userUpdated.VisitorIP2 = user.VisitorIP2;
-            userUpdated.VisitorIpsAssignedNo = user.VisitorIpsAssignedNo;
+          
 
 
             var Result = await _userManger.UpdateAsync(userUpdated);

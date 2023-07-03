@@ -520,9 +520,11 @@ namespace OnlineTeacher.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
@@ -534,10 +536,19 @@ namespace OnlineTeacher.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ParentPhone")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("لا يوجد هاتف لهذا الشخص");
 
-                    b.Property<string>("UserID")
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("لا يوجد هاتف لهذا الشخص");
+
+                    b.Property<string>("school")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -694,23 +705,13 @@ namespace OnlineTeacher.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("MacAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MacAddress2")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VisitorIP")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VisitorIP2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VisitorIpsAssignedNo")
+                    b.Property<int?>("studentID")
                         .HasColumnType("int");
+
+                    b.HasIndex("studentID");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -922,6 +923,15 @@ namespace OnlineTeacher.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("OnlineTeacher.DataAccess.ApplicationUser", b =>
+                {
+                    b.HasOne("OnlineTeacher.DataAccess.Context.Student", "student")
+                        .WithMany()
+                        .HasForeignKey("studentID");
+
+                    b.Navigation("student");
                 });
 
             modelBuilder.Entity("OnlineTeacher.DataAccess.Context.Exam", b =>

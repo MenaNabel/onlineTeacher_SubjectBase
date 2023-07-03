@@ -33,7 +33,7 @@ namespace OnlineTeacher.Controllers.Admin
         /// List Of AddingsubjctViewModel
         /// </returns>
         [HttpGet]
-        [Authorize(Roles = Roles.Admin)]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int index=0 , int size=20)
         {
             return Ok(await _subjects.GetAll(index, size));
@@ -45,6 +45,8 @@ namespace OnlineTeacher.Controllers.Admin
         {
             return Ok(await _subjects.GetAll());
         }
+
+
 
         [HttpGet("DownloadInfo")]
          [Authorize(Roles = Roles.Admin)]
@@ -136,6 +138,14 @@ namespace OnlineTeacher.Controllers.Admin
             return Ok(await _subjects.Filter(subj => subj.LevelID == Level , index , size));
 
         }
+
+        //[HttpGet("GetAllLectures/{Level}")]
+
+        //public async Task<IActionResult> GetAllLectures(int Level, int index = 0, int size = 100)
+        //{
+        //    return Ok(await _subjects.GetAllLectures(subj => subj.LevelID == Level, index, size));
+
+        //}
         [HttpGet("Search")]
        [Authorize]
         public async Task<IActionResult> Search([FromQuery]string SubjectName, int index = 0, int size = 10)

@@ -22,5 +22,6 @@ namespace OnlineTeacher.Services.Subjects.Helper
         Task<IEnumerable<SubjectViewModel>> GetAll();
         Task<bool> Delete(int ID);
         Task<IPaginate<SubjectViewModel>> Filter(Expression<Func<Subject, bool>> FilterCondition, int index = 0, int size = 10);
+        Task<IPaginate<SubjectViewModel>> GetAllLectures(Expression<Func<Subject, bool>> FilterCondition, int index = 0, int size = 10);
     }
 }

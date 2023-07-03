@@ -32,7 +32,8 @@ namespace OnlineTeacher.DataAccess
                 table.LectureID
 
             });
-
+            modelBuilder.Entity<Student>().Property(studen => studen.Phone).HasDefaultValue("لا يوجد هاتف لهذا الشخص").IsRequired();
+            modelBuilder.Entity<Student>().Property(studen => studen.ParentPhone).HasDefaultValue("لا يوجد هاتف لهذا الشخص").IsRequired();
             base.OnModelCreating(modelBuilder);
         }
         public OnlineExamContext(DbContextOptions options) : base(options)

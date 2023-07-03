@@ -1,4 +1,4 @@
-use OnlineExam;
+
  --insert trigger
 create trigger tr_tblSiteInfo_ForInsertingStudent
 on Student

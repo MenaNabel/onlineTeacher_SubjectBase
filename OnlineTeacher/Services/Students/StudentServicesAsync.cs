@@ -40,6 +40,7 @@ namespace OnlineTeacher.Services.Students
         {
             Student student = ConvertToAddStudentViewModel(studentViewModel);
             StudentAddProcess(student);
+           
             var StudentAdded = await _Students.InsertAsync(student);
 
             return StudentAdded?.Entity is not null ? ConvertToAddStudentViewModel(StudentAdded.Entity) : null;
@@ -75,19 +76,19 @@ namespace OnlineTeacher.Services.Students
         public async Task<StudentViewModel> GetAsync()
         {
 
-            var Student = await Get(GetUserID());
+            var Student = await Get(_User.GetStudentID());
             if (Student is null)
                 return null;
             //if(IsAdminValidate() ||  UserRequestingValiedTodealWithEntityValidation(Student.UserID))
             return ConvertToStudentViewModel(Student);
             // return null;
         }
-        public async Task<StudentViewModel> GetAsyncWithoutValidate(string UserID)
+        public async Task<StudentViewModel> GetAsyncWithoutValidate(int studentID)
         {
 
             try
             {
-                var Student = await _Students.SingleOrDefaultAsync(S => S.UserID == UserID);
+                var Student = await _Students.SingleOrDefaultAsync(S => S.ID == studentID);
                 return Student is not null ? ConvertToStudentViewModel(Student) : null;
             }
             catch (Exception ex)
@@ -97,13 +98,13 @@ namespace OnlineTeacher.Services.Students
             }
 
         }
-
+        
         public async Task<bool> Update(UpdatedStudnetViewModel studentviewModel)
         {
-            studentviewModel.UserID = GetUserID();
-            Student student = await Get(studentviewModel.UserID);
+            
+            Student student = await Get(studentviewModel.ID);
 
-            if (student is null || !UserRequestingValiedTodealWithEntityValidation(student.UserID))
+            if (student is null || !UserRequestingValiedTodealWithEntityValidation(student.ID))
                 return false;
 
 
@@ -156,12 +157,12 @@ namespace OnlineTeacher.Services.Students
 
 
         }
-        private async Task<Student> Get(string UserID)
+        private async Task<Student> Get(int UserID)
         {
             try
             {
                 var ID = _User.GetStudentID();
-                var Student = await _Students.SingleOrDefaultAsync(S => S.UserID == UserID, include: St => St.Include(s => s.Level).Include(s => s.Subscriptions.Where(sub => sub.StudentID == ID)));
+                var Student = await _Students.SingleOrDefaultAsync(S => S.ID == UserID, include: St => St.Include(s => s.Level).Include(s => s.Subscriptions.Where(sub => sub.StudentID == ID)));
                 return Student is not null ? Student : null;
             }
             catch (Exception ex)
@@ -178,7 +179,7 @@ namespace OnlineTeacher.Services.Students
         {
             try
             {
-                var Students = await _Students.GetListAsync(st => new StudentViewModelWithoutImage { ID = st.ID , LevelID = st.LevelID , Name = st.Name ,Phone = st.Phone , City = st.City , Email = st.Email} , filter, include: St => St.Include(s => s.Level) , index:index , size:size);
+                var Students = await _Students.GetListAsync(st => new StudentViewModelWithoutImage { ID = st.ID , LevelID = st.LevelID , Name = st.Name ,Phone = st.Phone , City = st.City , Email = st.Email, Level = new LevelViewModel { LevelName = st.Level.LevelName} } , filter, include: St => St.Include(s => s.Level) , index:index , size:size);
                 return Students ;
             }
             catch (Exception ex)
@@ -244,9 +245,9 @@ namespace OnlineTeacher.Services.Students
 
         #endregion
         #region Validation 
-        private bool UserRequestingValiedTodealWithEntityValidation(string UserID)
+        private bool UserRequestingValiedTodealWithEntityValidation(int UserID)
         {
-            return UserID == GetUserID();
+            return UserID == _User.GetStudentID();
 
         }
         private bool IsAdminValidate()

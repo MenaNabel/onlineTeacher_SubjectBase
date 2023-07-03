@@ -10,13 +10,15 @@ using Threenine.Data.Paging;
 
 namespace OnlineTeacher.Services.Students.Helper
 {
-    public interface IStudentAsync : IInsertAsync<AddedStudentViewModel> , IReadAsync<StudentViewModel>
+    public interface IStudentAsync : IInsertAsync<AddedStudentViewModel>, IReadAsync<StudentViewModel>
     {
         Task<bool> Update(UpdatedStudnetViewModel studentviewModel);
         Task<StudentViewModel> GetAsync();
-        Task<StudentViewModel> GetAsyncWithoutValidate(string UserID);
+        Task<StudentViewModel> GetAsyncWithoutValidate(int studentID);
         Task<IPaginate<StudentViewModelWithoutImage>> filter(Expression<Func<Student, bool>> filter, int index = 0, int size = 10);
 
         Task<bool> StudentUpdatePhoneNumber();
+        //int GetStudentID(string ID);
+
     }
 }

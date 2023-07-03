@@ -11,6 +11,10 @@ namespace OnlineTeacher.ViewModels.Lecture
         public string Name { get; set; }
         public string LectureLink { get; set; }
         public string Description { get; set; }
+        public string FileName { get; set; }
+        public int Month { get; set; }
+        public bool IsAppear { get; set; }
+        public bool IsFree { get; set; }
         public string Type { get; set; }
         public DateTime DateTime { get; set; }
         public int watchingCount { get; set; }

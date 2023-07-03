@@ -217,11 +217,11 @@ namespace OnlineTeacher.Services.Exams
             return new Paginate<Exam, ExamViewModelWithLecture>(Exams, l => l.Select(le => ConvertToExamViewModelWithLecture(le)));
 
         }
-        public async Task<IEnumerable<LectureExamStudentDetailViewModel>> GetExamsForStudents()
+        public async Task<IPaginate<LectureExamStudentDetailViewModel>> GetExamsForStudents(int index, int size)
         {
 
-            var Report = await _Exams.GetListAsync(include: e => e.Include(s => s.StudentExams).ThenInclude(s => s.Student).Include(E => E.Lecture));
-            return Report.Items.Select(ConvertToLectureExamStudentDetailViewModel).Where(s => s is not null);
+            var Report = await _Exams.GetListAsync(include: e => e.Include(s => s.StudentExams).ThenInclude(s => s.Student).Include(E => E.Lecture), index: index, size: size);
+            return new Paginate<Exam, LectureExamStudentDetailViewModel>( Report, l => l.Select(le => ConvertToLectureExamStudentDetailViewModel(le)).Where(s => s is not null));
         }
 
         private LectureExamStudentDetailViewModel ConvertToLectureExamStudentDetailViewModel(Exam Exam)
