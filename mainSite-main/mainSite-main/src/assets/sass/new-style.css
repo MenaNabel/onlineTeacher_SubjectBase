@@ -1,0 +1,883 @@
+.levels-section {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  overflow-x: hidden;
+}
+
+.levels-section .level-card {
+  -webkit-box-shadow: 0 5px 15px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px 1px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  display: inline-block;
+  height: 250px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: #1f3b64;
+  max-width: 100%;
+}
+
+.levels-section .level-card h5 {
+  font-size: 20px;
+}
+
+.levels-section .level-card:hover {
+  background-color: #1f3b64;
+  color: #fff;
+}
+
+.level-details {
+  padding-top: 90px;
+  padding-bottom: 90px;
+}
+
+.level-details .lev-head {
+  font-size: 30px;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 40px;
+}
+
+.sub-card {
+  border-radius: 10px;
+  border: 1px solid #bababa;
+  padding: 10px;
+  display: block;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.sub-card .card-img {
+  height: 200px;
+  background-size: cover;
+  background-position: top;
+  border-radius: 10px;
+  position: relative;
+}
+
+.sub-card h6 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-family: "Changa", sans-serif;
+}
+
+.sub-card .card-title {
+  font-size: 20px;
+  color: #1f3b64;
+  margin: 0;
+  margin-top: 10px;
+  font-family: "Changa", sans-serif !important;
+  margin-bottom: 10px;
+}
+
+.sub-card .card-price {
+  color: #1fb354;
+  font-size: 15px;
+  font-family: "Changa", sans-serif;
+}
+
+.level-details,
+.levels-section {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  top: 0;
+}
+
+.loading .btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 1.3rem;
+  border: none;
+  background-color: #1f3b64;
+  color: #f1faee;
+  font-family: "Changa", sans-serif;
+  padding: 0.8rem 1.5rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  -webkit-transition: 0.3s ease;
+  transition: 0.3s ease;
+  -webkit-box-shadow: 0 1rem 2rem -1rem rgba(0, 0, 0, 0.445);
+  box-shadow: 0 1rem 2rem -1rem rgba(0, 0, 0, 0.445);
+}
+
+.loading .btn:hover {
+  background-color: #003049;
+  color: #eae2b7;
+  -webkit-box-shadow: 0 1rem 1rem -1rem rgba(0, 0, 0, 0.445);
+  box-shadow: 0 1rem 1rem -1rem rgba(0, 0, 0, 0.445);
+}
+
+.loading .btn__text {
+  margin-left: 0.8rem;
+  margin-right: 10px;
+}
+
+.loading .spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-block;
+  border: 3px solid #dddf00;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: spin 1s infinite;
+  animation: spin 1s infinite;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    border-top-color: #fcab41;
+    border-bottom-color: #80ffdb;
+    border-right-color: transparent;
+    border-left-color: transparent;
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    border-top-color: #fcab41;
+    border-bottom-color: #80ffdb;
+    border-right-color: transparent;
+    border-left-color: transparent;
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.subject-details-page {
+  overflow-x: hidden;
+}
+
+.subject-details-page .subject-name {
+  font-size: 35px;
+  text-align: center;
+  color: #1f3b64;
+}
+
+.subject-details-page .card-img {
+  width: 400px;
+  max-width: 100%;
+  border-radius: 5px;
+  margin-right: auto;
+}
+
+.subject-details-page .card-img img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.subject-details-page ul {
+  margin-bottom: 0;
+  list-style: none;
+  padding-right: 0;
+}
+
+.subject-details-page ul li {
+  font-size: 20px;
+  margin-bottom: 10px;
+  background-color: #4ab16e2c;
+  padding: 20px;
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  padding-right: 45px;
+}
+
+.subject-details-page ul li i {
+  color: #1f3b64;
+  font-size: 30px;
+  margin-top: 5px;
+}
+
+.subject-details-page ul li::before {
+  content: "\f058";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #1fb354;
+  position: absolute;
+  right: 20px;
+}
+
+.subject-details-page .btn-subscripe {
+  background-color: #1f3b64;
+  color: #fff;
+  border: 1px solid #1f3b64;
+  padding: 5px 40px;
+  font-size: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: "Changa", sans-serif;
+}
+
+.subject-details-page .btn-subscripe:hover {
+  background-color: #fff;
+  color: #1f3b64;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--error {
+  text-align: right;
+  font-family: "Changa", sans-serif;
+}
+
+.my-account {
+  padding-top: 50px;
+}
+
+.my-account .MuiButtonBase-root {
+  font-family: "Changa", sans-serif !important;
+}
+
+.my-account canvas {
+  height: 300px !important;
+}
+
+.my-account .MuiBox-root.css-19kzrtu {
+  padding: 0;
+  padding-right: 15px;
+}
+
+.my-account .MuiButtonBase-root {
+  border-radius: 5px;
+}
+
+.my-account .css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  background-color: #4ab16e86;
+  color: #000;
+  border-right: 5px !important;
+}
+
+.my-account .css-10d9dml-MuiTabs-indicator {
+  background-color: #1f3b64;
+}
+
+.my-account .css-35zqo5-MuiTabs-root {
+  border-right: 0;
+}
+
+.my-account .profile-form {
+  margin-bottom: 20px;
+}
+
+.my-account .profile-form label {
+  font-family: "Changa", sans-serif;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.my-account .profile-form .form-control {
+  font-family: "Changa", sans-serif;
+  width: 100%;
+  height: 50px;
+  border: 0;
+  background-color: #fff;
+  border: 1px solid #1f3b64;
+  border-radius: 5px;
+  padding-right: 10px;
+}
+
+.my-account .profile-form button {
+  width: 100%;
+  background-color: #1f3b64;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  border: 0;
+  border-radius: 5px;
+  font-family: "Changa", sans-serif !important;
+  cursor: pointer;
+}
+
+.my-lectures {
+  padding-top: 100px;
+}
+
+.exam .question-card .card-body {
+  padding-right: 0;
+  margin-top: 0;
+  padding-right: 10px;
+}
+
+.exam .question-card .form-group {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.exam .card-footer .btn {
+  padding: 10px;
+  border: 0;
+  background-color: #1f3b64;
+  color: #fff;
+  border-radius: 5px;
+  font-family: "Changa", sans-serif !important;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.exam .card-footer .btn-correct {
+  background-color: #1fb354;
+}
+
+.examtimer {
+  text-align: center;
+  background: #1fb354;
+  padding: 8px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.examtimer .label {
+  font-size: 15px;
+}
+
+.examtimer .time {
+  color: #1f3b64;
+  margin-left: 10px;
+}
+
+.month-page {
+  margin-top: 40px;
+}
+
+.month-card {
+  background-color: #1f3b64;
+  width: 100%;
+  padding: 20px;
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 1px solid #1f3b64;
+}
+
+.month-card:hover {
+  background-color: #fff;
+  color: #1f3b64;
+}
+
+.lectures-page .month-card {
+  background-color: #1fb354;
+  border-color: #1fb354;
+}
+
+.lectures-page .month-card:hover {
+  background-color: #fff;
+  color: #1fb354;
+}
+
+.list-header {
+  font-size: 20px;
+  text-align: center;
+}
+
+.mylectures-list {
+  padding-top: 50px;
+}
+
+.mylectures-list .sub-card:hover {
+  background-color: #1f3b64;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  color: #fff;
+}
+
+.mylectures-list .sub-card:hover h5 {
+  color: #fff;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.userdropdown {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.userdropdown button {
+  font-family: "Changa", sans-serif !important;
+  background-color: #1fb354;
+  padding: 10px;
+  color: #fff;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.userdropdown button:hover {
+  background-color: #1fb354;
+  color: #fff;
+}
+
+.MuiMenuItem-root {
+  font-family: "Changa", sans-serif !important;
+}
+
+.noExam {
+  background-color: #1fb354;
+  padding: 30px;
+  border-radius: 5px;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.noExam h5 {
+  font-size: 20px;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.noExam button {
+  background-color: #fff;
+  padding: 5px 20px;
+  border-radius: 5px;
+  font-family: "Changa", sans-serif !important;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  color: #000;
+}
+
+.noExam button:hover {
+  background-color: #1f3b64;
+  color: #fff;
+}
+
+.login-form {
+  position: relative;
+}
+
+.loginloading {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.css-1rn30mb-MuiCircularProgress-root {
+  color: #1f3b64;
+  width: 100px !important;
+  height: 100px !important;
+}
+
+.css-ol7wxs-MuiTypography-root {
+  color: #fff;
+  font-size: 20px;
+  font-family: "Changa", sans-serif !important;
+}
+
+.Toastify__toast-body {
+  font-family: "Changa", sans-serif !important;
+  text-align: right;
+}
+
+.lectures-details ul {
+  margin: 0;
+}
+
+.lectures-details iframe {
+  border: 2px solid #1fb354;
+  border-radius: 5px;
+}
+
+.box-title {
+  font-size: 18px;
+  color: #1f3b64;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.sign-up-page form {
+  position: relative;
+}
+
+.user-card {
+  -webkit-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.445);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.445);
+  width: 250px;
+  padding: 20px;
+  text-align: center;
+  margin: auto;
+  border-radius: 5px;
+  margin-top: 40px;
+}
+
+.user-card .user-imag {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  margin: auto;
+  border: 1px solid #000;
+}
+
+.user-card h5,
+.user-card p {
+  margin: 0;
+  font-family: "Changa", sans-serif !important;
+}
+
+.user-card h5 {
+  font-size: 20px;
+  color: #1f3b64;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.user-card p {
+  font-size: 16px;
+  color: #333;
+}
+
+.MuiModal-root {
+  position: relative;
+}
+
+.MuiModal-root h2 {
+  font-family: "Changa", sans-serif !important;
+  font-size: 18px;
+  margin: 0;
+}
+
+.MuiModal-root .form-control {
+  font-family: "Changa", sans-serif !important;
+  width: 100%;
+  height: 90px;
+  border-radius: 5px;
+  border: 1px solid #e1e1e1;
+  margin-top: 20px;
+  padding: 5px;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 90px;
+  max-height: 200px;
+}
+
+.MuiModal-root .MuiBox-root.css-1wnsr1i {
+  border-radius: 5px;
+  border: 0;
+  padding: 30px;
+}
+
+.MuiModal-root .btn {
+  border: 0;
+  padding: 8px;
+  background-color: #1fb354;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  font-family: "Changa", sans-serif !important;
+  border: 1px solid #1fb354;
+  cursor: pointer;
+}
+
+.MuiModal-root .btn:hover {
+  background-color: #fff;
+  color: #1fb354;
+}
+
+.honor-card {
+  text-align: center;
+  -webkit-box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 20px;
+}
+
+.honor-card .card-img {
+  width: 100px;
+  height: 100px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.honor-card h5,
+.honor-card p {
+  margin: 0;
+}
+
+.honor-card .card-name {
+  font-size: 25px;
+}
+
+.honor-card .card-level {
+  font-size: 14px;
+  color: #333;
+}
+
+.honor-card ul {
+  list-style-type: none;
+  margin-bottom: 0;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-evenly;
+  -ms-flex-pack: space-evenly;
+  justify-content: space-evenly;
+  background-color: #1fb354;
+  color: #fff;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+.honor-card ul span {
+  font-size: 20px;
+}
+
+.why-patform {
+  margin-top: 0 !important;
+}
+
+.site-footer .more-important li span:last-child {
+  color: #1fb354;
+}
+
+.telegramLink {
+  width: 60px;
+  height: 60px;
+  background-color: #fff;
+  position: fixed;
+  bottom: 10px;
+  left: 40px;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #1f3b64;
+}
+
+.telegramLink a {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.telegramLink i {
+  color: #fff;
+  font-size: 45px;
+}
+
+.what-say .wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.what-say .wrapper .btn-more {
+  margin: unset;
+  margin: 5px;
+}
+
+.what-say .wrapper .btn-link {
+  background-color: #1f3b64;
+}
+
+.add-review h5 {
+  font-size: 20px;
+  color: #1f3b64;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.add-review textarea {
+  width: 100%;
+  height: 200px;
+  resize: none;
+  border-radius: 5px;
+  font-family: "Changa", sans-serif !important;
+  padding: 10px;
+}
+
+.add-review textarea::-webkit-input-placeholder {
+  font-size: 14px;
+  color: #424242;
+}
+
+.add-review textarea:-ms-input-placeholder {
+  font-size: 14px;
+  color: #424242;
+}
+
+.add-review textarea::-ms-input-placeholder {
+  font-size: 14px;
+  color: #424242;
+}
+
+.add-review textarea::placeholder {
+  font-size: 14px;
+  color: #424242;
+}
+
+.add-review button {
+  padding: 10px 40px;
+  background-color: #1fb354;
+  font-family: "Changa", sans-serif !important;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  border: 1px solid #1fb354;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-review button:hover {
+  background-color: #fff;
+  color: #1fb354;
+}
+
+.add-review-page .what-say {
+  margin-top: 0;
+  background-color: transparent;
+}
+
+.add-review-page .what-say .teste-card {
+  background-color: #eee;
+}
+
+.live-lectures {
+  margin-top: 90px;
+}
+
+.live-lectures .section-header {
+  text-align: right;
+}
+
+.notaccept {
+  color: red !important;
+}
+
+.freeLecture-card {
+  text-align: center;
+}
+
+.freeLecture-card h5 {
+  font-size: 25px;
+  color: #1f3b64;
+  margin: 0;
+}
+
+.freeLecture-card a {
+  background-color: #1fb354;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 30px;
+  margin-top: 10px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+@media (max-width: 991px) {
+  .userdropdown {
+    margin-top: 10px;
+  }
+}
+/*# sourceMappingURL=new-style.css.map */
+.description {
+  margin-bottom: 15px !important;
+}
+
+#mf:nth-child(1) {
+  font-size: 24px;
+}
